@@ -18,7 +18,8 @@ Route::get('/register', [RegisterdUserController::class, 'register']);
 Route::post('/register', [RegisterdUserController::class, 'store']);
 Route::get('/login', [AtteController::class, 'login']);
 Route::post('/login', [AtteController::class, 'stamp']);
-Route::get('/', [AtteController::class, 'stamptest']);
+Route::get('/', [AtteController::class, 'home']);
+Route::post('/', [AtteController::class, 'submit']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');

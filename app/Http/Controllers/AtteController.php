@@ -31,20 +31,25 @@ class AtteController extends Controller
         $password = $request->password;
         if (Auth::attempt(['email' => $email,'password' => $password])) {
             $user = Auth::user($request);
-            return view('/stamp', ['user' => $user]);
+            return view('stamp', ['user' => $user]);
         } else {
             $txt = 'ログインに失敗しました。';
         return redirect('/login',['txt' => $txt]);
         }
     }
 
+    public function home()
+    {
+        $
+    }
+
+    public function submit(Request $request)
+    {
+        if ($user)
+    }
+
     public function record(Request $request)
     {
 
-    }
-
-    public function stamptest()
-    {
-        return view('/stamp');
     }
 }
