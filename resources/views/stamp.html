@@ -126,10 +126,10 @@
   <div class="container">
   <p class="greeting character">{{$user->name}}さんお疲れ様です！</p>
   <!--<form action="/" method="post">-->
-    <button class="button start_working active" name="sw"><p>勤務開始</p></button>
-    <button class="button end_working" name="ew"><p>勤務終了</p></button>
-    <button class="button start_breaketime" name="sb"><p>休憩開始</p></button>
-    <button class="button end_breaketime" name="eb"><p>休憩終了</p></button>
+    <button class="button start_working active" name="start_working" ><p>勤務開始</p></button>
+    <button class="button end_working" name="end_working" disabled><p>勤務終了</p></button>
+    <button class="button start_breaketime" name="start_breaketime" disabled><p>休憩開始</p></button>
+    <button class="button end_breaketime" name="start_breaketime" disabled><p>休憩終了</p></button>
   <!--</form>-->
   </div>
   </main>
@@ -137,25 +137,81 @@
     <small>Atte,inc.</small>
   </footer>
   <script>
-    const buttons = document.getElementsByClassName('button');
+    /*const buttons = document.getElementsByClassName('button');
     for (let i  = 0; i < buttons.length; i++) {
       if (buttons[i].classList.contains("active")) {
         if (buttons[i].classList.contains("start_working") || buttons[i].classList.contains("end_breaketime")) {
           buttons[i].addEventListener('click', goAwayFromWork);
-        } else /*if (buttons[i].classList.contains("end_working") || buttons[i].classList.contains("start_breaketime"))*/ {
-          //if (i == 1) {
+        } else if (buttons[i].classList.contains("end_working") || buttons[i].classList.contains("start_breaketime")) {
+          if (i == 1) {
             buttons[i].addEventListener('click', endWorking);
-          //} else if (i == 2) {
-            //buttons[i].addEventListener('click', startBreaketime);
-          //}
+          } else if (i == 2) {
+            buttons[i].addEventListener('click', startBreaketime);
+          }
         }
       }
+    }*/
+
+    const start_working = document.getElementsByClassName('start_working')[0];
+    const end_working = document.getElementsByClassName('end_working')[0];
+    const start_breaketime = document.getElementsByClassName('start_breaketime')[0];
+    const end_breaketime = document.getElementsByClassName('end_breaketime')[0];
+
+    if(start_working.className.includes('active')) {
+      //start_working.addEventListener('click', submitData(start_working));
+      start_working.addEventListener('click', submitData(start_working));
+      //function toggleActive();
+    }
+    if (end_working.className.includes('active') || start_breaketime.className.includes('active')) {
+      end_working.addEventListener('click', submitData(end_working));
+      start_breaketime.addEventListener('click', submitData(start_breaketime));
+    }
+    if (end_breaketime.className.includes('active')) {
+      end_breaketime.addEventListener('click', submitData(end_breaketime));
     }
 
-    function goAwayFromWork() {
-      this.classList.remove('active');
-      document.getElementsByClassName('end_working')[0].classList.add('active');
-      document.getElementsByClassName('start_breaketime')[0].classList.add('active');
+    function submitData(button_type) {
+        //this.classList.toggle('active');
+        //this.disabled = true;
+        if (button_type == start_working) {
+          start_working.classList.toggle('active');
+          start_working.disabled = true;
+          document.getElementsByClassName('end_working')[0].disabled = false;
+          document.getElementsByClassName('start_breaketime')[0].disabled = false;
+          document.getElementsByClassName('end_working')[0].classList.toggle('active');
+          document.getElementsByClassName('start_breaketime')[0].classList.toggle('active');
+        } else if (button_type == end_breaketime) {
+          end_breaketime.classList.toggle('active');
+          end_breaketime.disabled = true;
+          document.getElementsByClassName('end_working')[0].disabled = false;
+          document.getElementsByClassName('start_breaketime')[0].disabled = false;
+          document.getElementsByClassName('end_working')[0].classList.toggle('active');
+          document.getElementsByClassName('start_breaketime')[0].classList.toggle('active');
+        } else if (button_type == end_working) {
+          end_working.classList.toggle('active');
+          end_working.disabled = true;
+          document.getElementsByClassName('start_working')[0].disabled = false;
+          document.getElementsByClassName('start_breaketime')[0].disabled = true;
+          document.getElementsByClassName('start_working')[0].classList.toggle('active');
+          document.getElementsByClassName('start_breaketime')[0].classList.toggle('active');
+        } else if (button_type == start_breaketime) {
+          start_breaketime.classList.toggle('active');
+          start_breaketime.disabled = true;
+          document.getElementsByClassName('end_breaketime')[0].disabled = false;
+          document.getElementsByClassName('end_working')[0].disabled = true;
+          document.getElementsByClassName('end_breaketime')[0].classList.toggle('active');
+          document.getElementsByClassName('end_working')[0].classList.toggle('active');
+        }
+      };
+
+
+
+    /*function goAwayFromWork(button_type) {
+      if(button_type == start_working) {
+      start_working.classList.toggle('active');
+      document.getElementsByClassName('end_working')[0].classList.toggle('active');
+      document.getElementsByClassName('start_breaketime')[0].classList.toggle('active');
+      }
     };
 
     function endWorking() {
@@ -166,7 +222,7 @@
     function startBreaketime() {
       this.classList.remove('active');
       document.getElementsByClassName('end_breaketime')[0].classList.add('active');
-    };
+    };*/
   </script>
 </body>
 </html>

@@ -20,7 +20,7 @@ Route::get('/login', [AtteController::class, 'login']);
 Route::post('/login', [AtteController::class, 'stamp']);
 Route::get('/', [AtteController::class, 'home']);
 Route::post('/', [AtteController::class, 'submit']);
-
+Route::get('/attendance', [AtteController::class, 'record']);
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
