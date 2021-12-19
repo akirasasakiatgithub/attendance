@@ -47,6 +47,7 @@
     color: blue;
   }
 </style>
+<!--ログイン失敗時、ログアウト時の表示をさせる-->
 <div class="container">
   {}}
   <h1 class="heading">ログイン</h1>

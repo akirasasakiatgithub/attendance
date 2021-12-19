@@ -68,7 +68,7 @@
         <td>{{$item->name}}</td>
         <td>{{$item->start_working_at}}</td>
         <td>{{$item->end_working_at}}</td>
-        <td>{{$item->breaketime_length}}</td>
+        <td>{{$item->break_length}}</td>
         <td>{{$item->working_length}}</td>
       </tr>
       @endforeach

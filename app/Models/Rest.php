@@ -8,4 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 class Rest extends Model
 {
     use HasFactory;
+
+    protected $guarded = [
+        'id_r',
+        'created_at',
+        'start_break',
+        'end_break',
+    ];
+
+    protected $fillable = [
+        'update_at',
+    ];
+
+    /*public function user()
+    {
+        return $this->belongsTo('App\Models\User');
+    }*/
 }

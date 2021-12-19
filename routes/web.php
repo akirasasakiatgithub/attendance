@@ -14,15 +14,13 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/register', [RegisterdUserController::class, 'register']);
-Route::post('/register', [RegisterdUserController::class, 'store']);
-Route::get('/login', [AtteController::class, 'login']);
-Route::post('/login', [AtteController::class, 'stamp']);
-Route::get('/', [AtteController::class, 'home']);
-Route::post('/', [AtteController::class, 'submit']);
-Route::get('/attendance', [AtteController::class, 'record']);
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
-
-//require __DIR__.'/auth.php';
+Route::get('/register', [AuthController::class, 'getRegister']);
+Route::post('/register', [AuthController::class, 'postRegister']);
+Route::get('/login', [AuthController::class, 'getLogin']);
+Route::post('/login', [AuthController::class, 'postLogin']);
+Route::get('/', [AttendanceController::class, 'getIndex']);
+Route::get('/attendance/start', [AttendanceController::class, 'startAttendance']);
+Route::get('/attendance/end', [AttendanceController::class, 'endAttendance']);
+Route::get('/attendance/{num}', [AttendanceController::class, 'getAttendance']);
+Route::get('/break/start', [RestController::class, 'startRest']);
+Route::get('/break/end', [RestController::class, 'endtRest']);

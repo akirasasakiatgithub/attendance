@@ -71,12 +71,12 @@
     transform: translate(5%, -110%);
   }
 
-  .start_breaketime {
+  .start_break {
     color: whitesmoke;
     transform: translate(-105%, 10%);
   }
 
-  .end_breaketime {
+  .end_break {
     color: whitesmoke;
     transform: translate(5%, 10%);
   }
@@ -89,11 +89,11 @@
     color: #222222;
   }
 
-  .start_breaketime.active {
+  .start_break.active {
     color: #222222;
   }
 
-  .end_breaketime.active {
+  .end_break.active {
     color: #222222;
   }
 
@@ -124,10 +124,10 @@
       <button class="button end_working" name="end_working">
         <p>勤務終了</p>
       </button>
-      <button class="button start_breaketime" name="start_breaketime">
+      <button class="button start_break" name="start_break">
         <p>休憩開始</p>
       </button>
-      <button class="button end_breaketime" name="end_breaketime">
+      <button class="button end_break" name="end_break">
         <p>休憩終了</p>
       </button>
     </form>
@@ -140,19 +140,19 @@
   const buttons = document.getElementsByClassName('button');
   for (let i = 0; i < buttons.length; i++) {
     if (buttons[i].contains("active")) {
-      if (buttons[i].contains("start_working" || "end_breaketime")) {
+      if (buttons[i].contains("start_working" || "end_break")) {
         buttons[i].addEventListener('click', goAwayFromWork);
       } else if (buttons[i].contains("end_working")) {
         buttons[i].addEventListener('click', endWorking);
-      } else if (buttons[i].contains("start_breaketime")) {
-        buttons[i].addEventListener('click', startBreaketime);
+      } else if (buttons[i].contains("start_break")) {
+        buttons[i].addEventListener('click', startBreak);
       }
     }
 
     function goAwayFromWork() {
       this.classList.remove('active');
       buttons.getElementsByClassName('end_working')[0].classList.add('active');
-      buttons.getElementsByClassName('start_breaketime')[0].classList.add('active');
+      buttons.getElementsByClassName('start_break')[0].classList.add('active');
     };
 
     function endWorking() {
@@ -160,9 +160,9 @@
       buttons.getElementsByClassName('start_working')[0].classList.add('active');
     }
 
-    function startBreaketime() {
+    function startBreak() {
       this.classList.remove('active');
-      buttons.getElementsByClassName('end_breaketime')[0].classList.add('active');
+      buttons.getElementsByClassName('end_break')[0].classList.add('active');
     }
 </script>
 </body>

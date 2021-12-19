@@ -17,10 +17,16 @@ class User extends Authenticatable
      *
      * @var string[]
      */
+    protected $guarded = [
+        'id_u',
+        'created_at',
+    ];
+
     protected $fillable = [
         'name',
         'email',
         'password',
+        'update_at',
     ];
 
     /**
@@ -41,4 +47,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function attendances(){
+        return $this->hasMany('App\Models\Attendance');
+    }
+
+    public function rests(){
+        return $this->hasMany('App\Models\rest');
+    }
 }
