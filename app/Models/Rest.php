@@ -20,8 +20,8 @@ class Rest extends Model
         'update_at',
     ];
 
-    /*public function user()
+    public function attendance()
     {
-        return $this->belongsTo('App\Models\User');
-    }*/
+        return $this->hasOne('App\Models\Attendance');
+    }
 }

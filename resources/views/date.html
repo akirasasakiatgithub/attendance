@@ -27,6 +27,11 @@
     margin-right: 30px;
   }
 
+  .date {
+    display: inline-block;
+    margin: 10px auto;
+  }
+
   .container {
     background-color: whitesmoke;
     margin: 0 auto;
@@ -53,7 +58,9 @@
 </header>
 <main>
   <div class="container">
-    <p class="date">{{月日}}</p>
+    <a class="arrow" href="{!! '/attendance/' . ($num - 1) !!}">&lt;</a>
+    <p class="date">{{ $fixed_date }}</p>
+    <a class="arrow" href="{!! '/attendance/' . ($num + 1) !!}">&gt;</a>
     <table>
       <tr>
         <th>名前</th>
@@ -66,10 +73,10 @@
       @foreach($items as $item)
       <tr>
         <td>{{$item->name}}</td>
-        <td>{{$item->start_working_at}}</td>
-        <td>{{$item->end_working_at}}</td>
-        <td>{{$item->break_length}}</td>
-        <td>{{$item->working_length}}</td>
+        <td>{{$item->startWorking}}</td>
+        <td>{{$item->endWorking}}</td>
+        <td>{{$item->breakSum}}</td>
+        <td>{{$item->activeWorkingSum}}</td>
       </tr>
       @endforeach
       @endisset

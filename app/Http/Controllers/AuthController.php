@@ -44,6 +44,7 @@ class AuthController extends Controller
         $email = $request->email;
         $password = $request->password;
         if (Auth::attempt(['email' => $email, 'password' => $password])) {
+            dd($password);
             $user = Auth::user($request);
             return view('index', ['user' => $user]);
         } else {

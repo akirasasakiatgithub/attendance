@@ -33,7 +33,7 @@
     text-align: center;
   }
 
-  .login_wrap > p {
+  .login_wrap>p {
     margin: 0;
   }
 
@@ -59,6 +59,6 @@
   </form>
   <div class="login_wrap">
     <p>アカウントをお持ちの方はこちらから</p>
-    <a href="login.blade.php" class="link">ログイン</a>
+    <a href="{{ route('login') }}" class="link">ログイン</a>
   </div>
 </div>

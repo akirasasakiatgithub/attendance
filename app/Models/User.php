@@ -10,49 +10,51 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+  use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var string[]
-     */
-    protected $guarded = [
-        'id_u',
-        'created_at',
-    ];
+  /**
+   * The attributes that are mass assignable.
+   *
+   * @var string[]
+   */
+  protected $guarded = [
+    'id',
+    'created_at',
+  ];
 
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'update_at',
-    ];
+  protected $fillable = [
+    'name',
+    'email',
+    'password',
+    'update_at',
+  ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+  /**
+   * The attributes that should be hidden for serialization.
+   *
+   * @var array
+   */
+  protected $hidden = [
+    'password',
+    'remember_token',
+  ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+  /**
+   * The attributes that should be cast.
+   *
+   * @var array
+   */
+  protected $casts = [
+    'email_verified_at' => 'datetime',
+  ];
 
-    public function attendances(){
-        return $this->hasMany('App\Models\Attendance');
-    }
+  public function attendances()
+  {
+    return $this->hasMany('App\Models\Attendance');
+  }
 
-    public function rests(){
-        return $this->hasMany('App\Models\rest');
-    }
+  public function rests()
+  {
+    return $this->hasMany('App\Models\rest');
+  }
 }
