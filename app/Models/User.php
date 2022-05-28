@@ -44,6 +44,8 @@ class User extends Authenticatable
    *
    * @var array
    */
+  //carbonインスタンスへの変換が行われている。
+  //carbonインストール時に自動追加される？（つくられた経緯を忘れてしまった。）
   protected $casts = [
     'email_verified_at' => 'datetime',
   ];

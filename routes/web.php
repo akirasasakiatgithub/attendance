@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\RestController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,12 +21,19 @@ Route::get('/register', [AuthController::class, 'getRegister']);
 Route::post('/register', [AuthController::class, 'postRegister']);
 Route::get('/login', [AuthController::class, 'getLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'postLogin']);
-Route::get('/', [AttendanceController::class, 'getIndex']);
+Route::get('/', function () {
+    $user = Auth::user();
+    return view('index', ['user' => $user]);
+})->name('index');
+//[AttendanceController::class, 'getIndex']);
 Route::get('/attendance/start', [AttendanceController::class, 'startAttendance']);
 Route::get('/attendance/end', [AttendanceController::class, 'endAttendance']);
-Route::get('/attendance/{num}', [AttendanceController::class, 'getAttendance']);
+//本番は/attendance/{num}で登録
+Route::get('/attendance', [AttendanceController::class, 'getAttendance'])->name('atte');
 Route::get('/break/start', [RestController::class, 'startRest']);
 Route::get('/break/end', [RestController::class, 'endtRest']);
+
+Route::get('/test', [AttendanceController::class, 'test']);
 
 /*Route::get('/', function () {
     return view('welcome');

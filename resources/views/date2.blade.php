@@ -45,15 +45,15 @@
   <h1>Atte</h1>
   <nav class="nav">
     <ul class="nav_list">
-      <li class="nav_item"><a href="{{route('index')}}">ホーム</a></li>
-      <li class="nav_item"><a href="{{route('atte')}}">日付一覧</a></li>
+      <li class="nav_item"><a href="/">ホーム</a></li>
+      <li class="nav_item"><a href="/date">日付一覧</a></li>
       <li class="nav_item"><a href="">ログアウト</a></li>
     </ul>
   </nav>
 </header>
 <main>
   <div class="container">
-    <p class="date">{{"月日"}}</p>
+    <p class="date">{{月日}}</p>
     <table>
       <tr>
         <th>名前</th>

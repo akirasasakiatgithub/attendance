@@ -99,7 +99,7 @@
     <h1 class="heading">ログイン</h1>
     <form action="/login" method="post" class="form">
       @csrf
-      <input type="text" 　name="email" placeholder="メールアドレス">
+      <input type="text" name="email" placeholder="メールアドレス">
       <input type="text" name="password" placeholder="パスワード">
       <button class="submit_btn">ログイン</button>
     </form>

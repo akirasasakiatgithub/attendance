@@ -28,7 +28,7 @@ class AuthController extends Controller
             ]);
 
             Auth::login($user);
-            return redirect('/login');
+            return redirect('login');
         } catch (\Throwable $th) {
             return redirect('/register', ['txt' => '登録に失敗しました。']);
         }
@@ -36,7 +36,7 @@ class AuthController extends Controller
 
     public function getLogin()
     {
-        return view('/login');
+        return view('login');
     }
 
     public function postLogin(Request $request)
@@ -44,7 +44,6 @@ class AuthController extends Controller
         $email = $request->email;
         $password = $request->password;
         if (Auth::attempt(['email' => $email, 'password' => $password])) {
-            dd($password);
             $user = Auth::user($request);
             return view('index', ['user' => $user]);
         } else {
