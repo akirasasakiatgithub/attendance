@@ -88,7 +88,7 @@
   <nav class="nav">
     <ul class="nav_list">
       <li class="nav_item"><a href="/">ホーム</a></li>
-      <li class="nav_item"><a href="/date">日付一覧</a></li>
+      <li class="nav_item"><a href="">日付一覧</a></li>
       <li class="nav_item"><a href="">ログアウト</a></li>
     </ul>
   </nav>

@@ -45,15 +45,16 @@ class AuthController extends Controller
         $password = $request->password;
         if (Auth::attempt(['email' => $email, 'password' => $password])) {
             $user = Auth::user($request);
+            //dd($user);
             return view('index', ['user' => $user]);
         } else {
-            return redirect('/login', ['txt' => 'ログインに失敗しました。']);
+            return redirect('login', ['txt' => 'ログインに失敗しました。']);
         }
     }
 
     public function getLogout()
     {
         Auth::logout();
-        return redirect('/login', ['txt' => 'ログアウトしました。']);
+        return redirect('login', ['txt' => 'ログアウトしました。']);
     }
 }
