@@ -27,10 +27,9 @@ class AuthController extends Controller
                 'password' => Hash::make($request->password),
             ]);
 
-            Auth::login($user);
-            return redirect('login');
+            return view('login');
         } catch (\Throwable $th) {
-            return redirect('/register', ['txt' => '登録に失敗しました。']);
+            return view('register', ['txt' => '登録に失敗しました。']);
         }
     }
 
@@ -43,18 +42,17 @@ class AuthController extends Controller
     {
         $email = $request->email;
         $password = $request->password;
-        if (Auth::attempt(['email' => $email, 'password' => $password])) {
-            $user = Auth::user($request);
-            //dd($user);
-            return view('index', ['user' => $user]);
+        $credidentials = ['email' => $email, 'password' => $password];
+        if (Auth::attempt($credidentials)) {
+            return redirect('/');
         } else {
-            return redirect('login', ['txt' => 'ログインに失敗しました。']);
+            return view('login');
         }
     }
 
     public function getLogout()
     {
         Auth::logout();
-        return redirect('login', ['txt' => 'ログアウトしました。']);
+        return view('login');
     }
 }

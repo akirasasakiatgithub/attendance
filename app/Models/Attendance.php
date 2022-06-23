@@ -22,90 +22,30 @@ class Attendance extends Model
         'update_at',
     ];
 
-    /*public function user(){
-        return $this->belongsTo('App\Models\User');
-    }*/
-
-    public function adjustAttendance($dayAttendance)
+    public function user()
     {
-        $dt = new Carbon();
-        foreach ($dayAttendance as $user) {
-            //同じユーザーのスタンプを集める
-            //ユーザーを勤務開始時間順に並べるようなのでoledest
-            $personalStamps = $dayAttendance->oldest('start_working')->where('id_u', $user->id)->toTimeString();
-            //$name = $personalStamps->name;
-            $startWorking = $personalStamps->start_working;
-            $endWorking = $personalStamps->end_working;
-            //秒で記録
-            $workingTime = $startWorking->diffInSeconds($endWorking);
-            //配列またはobjectが入っている→エラーなら配列に直す
-            $startBreakSet = $personalStamps->pluck('start_break')->oldest();
-            $endBreakSet = $personalStamps->pluck('end_break')->oldest();
-            //休憩の合計を求める
-            $breakSum = Carbon::parse('00:00:00');
-            for ($b = 0; $b < count($startBreakSet); $b++) {
-                /*$startBreakSum = $startBreakSum->addSecond(date('s', $endBreakSet[$s]))->format('d H:i:s');*/
+        return $this->belongsTo('App\Models\User');
+    }
 
-                //$startBreakSet[$b]がCarbon取得でないのでdiffINが使えないとか言って来たらCarbon::parseでCarbonに直す
-                $breakSum = $breakSum->addSecond($startBreakSet[$b]->diffInSeconds($endBreakSet[$b]));
-            }
-            /*$activeWorkingSum = $breakSum->diffInSeconds($workingTime)->format('H:i:s');*/
-            $activeWorkingSum = $workingTime->subSecond($breakSum);
+    public function adjustAttendance($date)
+    {
+        $dailyAtte = Attendance::where('date', $date)->get();
+        $idlist = $dailyAtte->unique('id_u')->pluck('id_u');
+        $dataSet = collect([]);
+
+        for ($i = 0; $i < count($idlist); $i++) {
+            //$dailyAtteから$idlist[i]でデータを引き出し
+            $personAtte = $dailyAtte->where('id_u', $idlist[$i]);
+            $startWork = $personAtte->whereNotNull('start_working')->pluck('start_working')->get('0');
+            $endWork = $personAtte->whereNotNull('end_working')->pluck('end_working')->get('0');
+            $startWork = new Carbon($startWork);
+            $endWork = new Carbon($endWork);
+            //時間の計算
+            //->format('%H:%i:%s')をつけたことで、むしろプロパティとして各単位にアクセスすることができなくなった。多分いらない。
+            $workTime = $startWork->diff($endWork)->format('%H:%i:%s');
+            $psnData = collect([$idlist[$i], $startWork, $endWork, $workTime]);
+            $dataSet->concat([$psnData]);
         }
-
-
-
-
-
-
-
-
-
-
-
-        $stamps = User::select('name', 'start_working', 'end_working', 'start_break', 'end_break')->whereDate('created_at', $dt->toDateString())->distinct()->get();
-
-        //whereDate('created_at'での取得インスタンスにid_u作成（新規登録）のものが混じってはいけないのでid_uは後で追加
-        //stampsインスタンスに対応するレコードのid_uのみ追加しているという前提
-        $stampsWithId = $stamps->addSelect('id_u')->get();
-
-        //userIdのリストをつくる
-        /*foreach ($stampsWithId as $stampWithId) {
-            ('start_working')
-            //配列またはobjectが入っている
-            $id_u = $stampWithId->id->oldest('start_working')->groupBy('id_u');
-        }*/
-
-        //for ($i = 0; $i < count($id_u); $i++) {
-        foreach ($stampsWithId as $user) {
-            //同じユーザーのスタンプを集める
-            //ユーザーを勤務開始時間順に並べるようなのでoledest
-            $personalStamps = $stampsWithId->oldest('start_working')->where('id_u', $user->id)->toTimeString()->get();
-            //$name = $personalStamps->name;
-            $startWorking = $personalStamps->start_working;
-            $endWorking = $personalStamps->end_working;
-            //秒で記録
-            $workingTime = $startWorking->diffInSeconds($endWorking);
-            //配列またはobjectが入っている→エラーなら配列に直す
-            $startBreakSet = $personalStamps->pluck('start_break')->oldest();
-            $endBreakSet = $personalStamps->pluck('end_break')->oldest();
-            //休憩の合計を求める
-            $breakSum = Carbon::parse('00:00:00');
-            for ($b = 0; $b < count($startBreakSet); $b++) {
-                /*$startBreakSum = $startBreakSum->addSecond(date('s', $endBreakSet[$s]))->format('d H:i:s');*/
-
-                //$startBreakSet[$b]がCarbon取得でないのでdiffINが使えないとか言って来たらCarbon::parseでCarbonに直す
-                $breakSum = $breakSum->addSecond($startBreakSet[$b]->diffInSeconds($endBreakSet[$b]));
-            }
-            /*$activeWorkingSum = $breakSum->diffInSeconds($workingTime)->format('H:i:s');*/
-            $activeWorkingSum = $workingTime->subSecond($breakSum);
-        }
-        $adjustAtteOutput = [
-            'startWorking' => $startWorking,
-            'endWorking' => $endWorking,
-            'breakSum' => $breakSum,
-            'activeWorkingSum' => $activeWorkingSum
-        ];
-        return $adjustAtteOutput;
+        return $dataSet;
     }
 }

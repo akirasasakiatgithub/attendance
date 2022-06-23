@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
 use App\Models\Attendance;
-
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
@@ -22,10 +20,10 @@ class AttendanceController extends Controller
     {
         $user = Auth::user();
         $startAttendanceTime = Carbon::now();
-        User::create([
-            'date' => $startAttendanceTime->format('YYYY-mm-dd'),
+        Attendance::insert([
+            'date' => $startAttendanceTime,
             'start_working' => $startAttendanceTime,
-            'id_u' => $user->id
+            'id_u' => $user->id,
         ]);
         return redirect('/');
     }
@@ -34,8 +32,8 @@ class AttendanceController extends Controller
     {
         $user = Auth::user();
         $endAttendanceTime = Carbon::now();
-        User::create([
-            'date' => $endAttendanceTime->format('YYYY-mm-dd'),
+        Attendance::insert([
+            'date' => $endAttendanceTime,
             'end_working' => $endAttendanceTime,
             'id_u' => $user->id
         ]);
@@ -44,45 +42,56 @@ class AttendanceController extends Controller
 
     public function getAttendance(Request $request)
     {
-        //計算機能のインスタンス作成
-        $adjustAttendance = new Attendance;
-        dd($adjustAttendance);
-        //requestをintegerにする
-        $num = (int)$request;
-        $dt = new Carbon();
-        //$attendanceStamps = 
-        if ($num == 0) {
-            //$dtをそのまま送って、その日の全スタンプを取得
-            $todaysAttendance = User::where('date', $dt)->distinct();
-            //その日の日付を送って、ユーザーごとの配列になった勤怠情報、日付を取得
-            $adjustedAttendance = $adjustAttendance->adjustAttendance($todaysAttendance);
+        if ($request->date) {
+            $date = $request->date;
         } else {
-            //過去の日付を送って、その日の全スタンプを取得
-            $pastAttendance = User::where('date', $dt->subDay($num))->distinct();
-            //過去の日付を送って、ユーザーごとの配列になった勤怠情報、日付を取得
-            $adjustedAttendance = $adjustAttendance->adjustAttendance($pastAttendance);
+            $now = new Carbon();
+            $date = $now->format('Y-m-d');               //string型の日時を代入
         }
-        
-        return
-        view('date', $adjustedAttendance);
+        $AtteList = adjustAttendance($date);
+        $BreakList = adjustBreak($date);
+        if ($AtteList) {
+            $totalList = connectCollection($AtteList, $BreakList);
+            $param = [
+                'attes' => $totalList,
+                'date' => $date
+            ];
+        } else {
+            $param = [
+                'attes' => null,
+                'date' => $date
+            ];
+        }
+        return view ('attendanceList', $param);
+    }
 
+    public function getPersonAttendance(Request $request)
+    {
+        $user = Auth::user();
+        if ($request->date) {
+            $date = $request->date;
+            $psnAtteList = searchAttePsn($user, $date);
+            $psnBreakList = searchBreakPsn($user, $date);
+        }
+        $psnAtteList = searchAttePsn($user);
+        $psnBreakList = searchBreakPsn($user);
+        if ($psnAtteList) {
+            $totalList = connectCollection($psnAtteList, $psnBreakList);
+            $param = [
+                'attes' => $totalList,
+                'name' => $user->name
+            ];
+        } else {
+            $param = [
+                'attes' => null,
+                'name' => $user->name
+            ];
+        }
+        return view ('personAttendanceList', $param);
+    }
 
-
-
-
-
-
-        $adjustAttendance = new AdjustAttendance;
-        $adjustAtteOutput = $adjustAttendance->adjustAttendance();
-        $items = [
-            'dt' => $dt,
-            'name' => $$adjustAtteOutput['name'],
-            'startBreakSet' => $adjustAtteOutput['startBreakSet'],
-            'endBreakSet' => $adjustAtteOutput['endBreakSet'],
-            '$activeWorkingSum' => $adjustAtteOutput['activeWorkingSum'],
-            'breakSum' => $adjustAtteOutput['breakSum']
-        ];
-
-        return view('date', $items);
+    public function test()
+    {
+        $attendance = new Attendance;
     }
 }

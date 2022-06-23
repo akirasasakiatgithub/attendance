@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UsersTableSeeder extends Seeder
 {
@@ -17,73 +18,73 @@ class UsersTableSeeder extends Seeder
         $param = [
             'name' => 'tony',
             'email' => 'tony123@gmail.com',
-            'password' => 'DVFAsdfvsd'
+            'password' => Hash::make('DVFAsdfvsd')
         ];
         DB::table('users')->insert($param);
         $param = [
             'name' => 'jack',
             'email' => 'jack123@gmail.com',
-            'password' => 'SDFAfffs455'
+            'password' => Hash::make('DVFAsdfvsd')
         ];
         DB::table('users')->insert($param);
         $param = [
             'name' => 'sara',
             'email' => 'sara123@gmail.com',
-            'password' => 'DSF4432fee'
+            'password' => Hash::make('DVFAsdfvsd')
         ];
         DB::table('users')->insert($param);
         $param = [
             'name' => 'saly',
             'email' => 'saly123@gmail.com',
-            'password' => 'VSDFgrg5665'
+            'password' => Hash::make('DVFAsdfvsd')
         ];
         DB::table('users')->insert($param);
         $param = [
             'name' => 'ryoichi',
             'email' => 'ryoichi123@gmail.com',
-            'password' => 'VDFmhyj675'
+            'password' => Hash::make('DVFAsdfvsd')
         ];
         DB::table('users')->insert($param);
         $param = [
             'name' => 'toki',
             'email' => 'toki123@gmail.com',
-            'password' => 'VEVERFgrvf564'
+            'password' => Hash::make('DVFAsdfvsd')
         ];
         DB::table('users')->insert($param);
         $param = [
             'name' => 'yasuyo',
             'email' => 'yasuyo123@gmail.com',
-            'password' => 'EVVDD54rf4'
+            'password' => Hash::make('DVFAsdfvsd')
         ];
         DB::table('users')->insert($param);
         $param = [
             'name' => 'ippei',
             'email' => 'ippei123@gmail.com',
-            'password' => 'VDSFFDgrfbf5645'
+            'password' => Hash::make('DVFAsdfvsd')
         ];
         DB::table('users')->insert($param);
         $param = [
             'name' => 'mina',
             'email' => 'mina123@gmail.com',
-            'password' => 'FDGrvgtf65565'
+            'password' => Hash::make('DVFAsdfvsd')
         ];
         DB::table('users')->insert($param);
         $param = [
             'name' => 'yuka',
             'email' => 'yuka123@gmail.com',
-            'password' => 'FGRBRBrffrgg565'
+            'password' => Hash::make('DVFAsdfvsd')
         ];
         DB::table('users')->insert($param);
         $param = [
             'name' => 'jun',
             'email' => 'jun123@gmail.com',
-            'password' => 'VVJYtffh45'
+            'password' => Hash::make('DVFAsdfvsd')
         ];
         DB::table('users')->insert($param);
         $param = [
             'name' => 'ryou',
             'email' => 'ryou123@gmail.com',
-            'password' => 'JRTGH6h87f'
+            'password' => Hash::make('DVFAsdfvsd')
         ];
         DB::table('users')->insert($param);
     }

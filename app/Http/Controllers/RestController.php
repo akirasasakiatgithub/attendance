@@ -5,28 +5,30 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Rest;
 
 class RestController extends Controller
 {
     //carbonで現在時刻取得
-    public function startRest()
+    public function startBreak()
     {
-        //format確認
         $user = Auth::user();
-        $startRestTime = Carbon::now();
-        User::create([
-            'start_break' => $startRestTime,
+        $startBreakTime = Carbon::now();
+        Rest::insert([
+            'date' => $startBreakTime,
+            'start_break' => $startBreakTime,
             'id_u' => $user->id
         ]);
         return redirect('/');
     }
 
-    public function endRest()
+    public function endBreak()
     {
         $user = Auth::user();
-        $endRestTime = Carbon::now();
-        User::create([
-            'end_break' => $endRestTime,
+        $endBreakTime = Carbon::now();
+        Rest::insert([
+            'date' => $endBreakTime,
+            'end_break' => $endBreakTime,
             'id_u' => $user->id
         ]);
         return redirect('/');

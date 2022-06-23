@@ -16,10 +16,11 @@ class CreateRestsTable extends Migration
         Schema::create('rests', function (Blueprint $table) {
             $table->id('id_r');
             $table->date('date');
-            $table->timestamp('start_break')->useCurrent();
-            $table->timestamp('end_break')->useCurrent();
+            $table->timestamp('start_break')->nullable();
+            $table->timestamp('end_break')->nullable();
             $table->unsignedBigInteger('id_u');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent()->nullable();
+            $table->timestamp('updated_at')->useCurrent()->nullable();
         });
     }
 

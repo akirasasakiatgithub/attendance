@@ -22,6 +22,6 @@ class Rest extends Model
 
     public function attendance()
     {
-        return $this->hasOne('App\Models\Attendance');
+        return $this->belongsTo('App\Models\User');
     }
 }

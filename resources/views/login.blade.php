@@ -83,18 +83,7 @@
     margin: 10px;
   }
 </style>
-<header class="header character">
-  <h1>Atte</h1>
-  <nav class="nav">
-    <ul class="nav_list">
-      <li class="nav_item"><a href="/">ホーム</a></li>
-      <li class="nav_item"><a href="">日付一覧</a></li>
-      <li class="nav_item"><a href="">ログアウト</a></li>
-    </ul>
-  </nav>
-</header>
 <!--ログイン失敗時、ログアウト時の表示をさせる-->
-<main>
   <div class="container">
     <h1 class="heading">ログイン</h1>
     <form action="/login" method="post" class="form">
@@ -108,7 +97,3 @@
       <a href="/register">会員登録</a>
     </div>
   </div>
-</main>
-<footer class="footer character">
-  <small>Atte,inc.</small>
-</footer>
