@@ -118,7 +118,6 @@ if (! function_exists('searchAttePsn')) {
         $dateList = $psnAtte->unique('date')->pluck('date');
         $dataSet = collect([]);
         $forNum = (count($dateList));
-        //dd($forNum);
         if ($psnAtte->isNotEmpty()) {
             for ($i = 0; $i < $forNum; $i++) {
                 $psnStrt = new Carbon($psnAtte->whereNotNull('start_working')->pluck('start_working')->get($i));

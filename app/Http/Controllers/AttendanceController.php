@@ -18,24 +18,23 @@ class AttendanceController extends Controller
 
     public function startAttendance()
     {
-        $user = Auth::user();
         $startAttendanceTime = Carbon::now();
+        //ddd($startAttendanceTime->format('H:i:s'));
         Attendance::insert([
-            'date' => $startAttendanceTime,
-            'start_working' => $startAttendanceTime,
-            'id_u' => $user->id,
+            'date' => $startAttendanceTime->format('Y-m-d'),
+            'start_working' => $startAttendanceTime->format('H:i:s'),
+            'id_u' => Auth::id()
         ]);
         return redirect('/');
     }
 
     public function endAttendance()
     {
-        $user = Auth::user();
         $endAttendanceTime = Carbon::now();
-        Attendance::insert([
-            'date' => $endAttendanceTime,
-            'end_working' => $endAttendanceTime,
-            'id_u' => $user->id
+        Attendance::create([
+            'date' => $endAttendanceTime->format('Y-m-d'),
+            'end_working' => $endAttendanceTime->format('H:i:s'),
+            'id_u' => Auth::id()
         ]);
         return redirect('/');
     }
