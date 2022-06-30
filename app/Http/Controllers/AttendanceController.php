@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Attendance;
+use App\Models\Rest;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
@@ -19,10 +20,11 @@ class AttendanceController extends Controller
     public function startAttendance()
     {
         $startAttendanceTime = Carbon::now();
-        //ddd($startAttendanceTime->format('H:i:s'));
-        Attendance::insert([
+        $attendance = new Attendance;
+        $attendance->validateBeforeWork($startAttendanceTime);
+        Attendance::create([
             'date' => $startAttendanceTime->format('Y-m-d'),
-            'start_working' => $startAttendanceTime->format('H:i:s'),
+            'start_working' => $startAttendanceTime->format('Y-m-d H:i:s'),
             'id_u' => Auth::id()
         ]);
         return redirect('/');
@@ -31,9 +33,14 @@ class AttendanceController extends Controller
     public function endAttendance()
     {
         $endAttendanceTime = Carbon::now();
+        $attendance = new Attendance;
+        $attendance->validateAtWork($endAttendanceTime);
+        $attendance->validateNotEndWork($endAttendanceTime);
+        $rest = new Rest;
+        $rest->validateEndBreak($endAttendanceTime);
         Attendance::create([
             'date' => $endAttendanceTime->format('Y-m-d'),
-            'end_working' => $endAttendanceTime->format('H:i:s'),
+            'end_working' => $endAttendanceTime->format('Y-m-d H:i:s'),
             'id_u' => Auth::id()
         ]);
         return redirect('/');
@@ -41,6 +48,7 @@ class AttendanceController extends Controller
 
     public function getAttendance(Request $request)
     {
+        $sort = $request->sort;
         if ($request->date) {
             $date = $request->date;
         } else {
@@ -50,15 +58,18 @@ class AttendanceController extends Controller
         $AtteList = adjustAttendance($date);
         $BreakList = adjustBreak($date);
         if ($AtteList) {
-            $totalList = connectCollection($AtteList, $BreakList);
+            $totalList = connectCollection($AtteList, $BreakList)->sortBy($sort)->paginate(5);
+            ddd($totalList);
             $param = [
-                'attes' => $totalList,
-                'date' => $date
+                'items' => $totalList,
+                'date' => $date,
+                'sort' => $sort
             ];
         } else {
             $param = [
-                'attes' => null,
-                'date' => $date
+                'items' => null,
+                'date' => $date,
+                'sort' => $sort
             ];
         }
         return view ('attendanceList', $param);
@@ -66,6 +77,7 @@ class AttendanceController extends Controller
 
     public function getPersonAttendance(Request $request)
     {
+        $sort = $request->sort;
         $user = Auth::user();
         if ($request->date) {
             $date = $request->date;
@@ -75,15 +87,17 @@ class AttendanceController extends Controller
         $psnAtteList = searchAttePsn($user);
         $psnBreakList = searchBreakPsn($user);
         if ($psnAtteList) {
-            $totalList = connectCollection($psnAtteList, $psnBreakList);
+            $totalList = connectCollection($psnAtteList, $psnBreakList)->sortBy($sort)->paginate(5);
             $param = [
-                'attes' => $totalList,
-                'name' => $user->name
+                'items' => $totalList,
+                'name' => $user->name,
+                'sort' => $sort
             ];
         } else {
             $param = [
-                'attes' => null,
-                'name' => $user->name
+                'items' => null,
+                'name' => $user->name,
+                'sort' => $sort
             ];
         }
         return view ('personAttendanceList', $param);

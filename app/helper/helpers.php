@@ -53,7 +53,7 @@ if (!function_exists('adjustBreak')) {
             for ($i = 0; $i < count($idlistB); $i++) {
                 $personBreak = $dailyBreak->where('id_u', $idlistB[$i]);             //$dailyBreakから$idlistB[i]でデータを引き出し
                 //！※休憩は何度でもとってよいことに留意！
-                $totalBreakSecond = 0;
+                $totalBreakSeconds = 0;
                 $breakNum = (count($personBreak) / 2);
                 for ($j = 0; $j < $breakNum; $j++) {
                     $startBreak = new Carbon($personBreak->whereNotNull('start_break')->pluck('start_break')->get($j));
@@ -61,12 +61,12 @@ if (!function_exists('adjustBreak')) {
                     $startUnixTime = $startBreak->getTimestamp();
                     $endUnixTime = $endBreak->getTimestamp();
                     $breakTime = $endUnixTime - $startUnixTime;                 //unixタイムスタンプを使って休憩時間を求める
-                    $totalBreakSecond += $breakTime;
+                    $totalBreakSeconds += $breakTime;
                 }
-                $totalBreak = new DateInterval('PT' . $totalBreakSecond . 'S');
-                /* $totalSecond = (int)$totalBreakSecond % 60;
-                $totalMinute = ($totalBreakSecond / 60) % 60;           //小数点以下考慮してない
-                $totalHour = ($totalBreakSecond / 60) / 60;　*/
+                $displaySeconds = (int)$totalBreakSeconds % 60;
+                $displayMinutes = floor($totalBreakSeconds / 60);
+                $displayHours = floor($displayMinutes / 60);
+                $totalBreak = new DateInterval("PT{$displayHours}H{$displayMinutes}M{$displaySeconds}S");
                 $psnData = collect(['idlist_b' => $idlistB[$i], 'break_time' => $totalBreak->format('%H:%I:%S')]);
                 $dataSet[$i] = $psnData;
             }
@@ -78,18 +78,20 @@ if (!function_exists('adjustBreak')) {
 
 if (! function_exists('connectCollection')) {
     /**
-     * 関数の説明文
+     * 別々のモデルから引き出されたCollectionをつなげる
      *
-     * @param  string  $xxx
+     * @param  object  $collectionA, object $collectionB
      */
     function connectCollection(object $collectionA, object $collectionB)
     {
         $idlistA = $collectionA->pluck('idlist_a');
         $idlistB = $collectionB->pluck('idlist_b');
+        $totalCollection = collect([]);
         for ($i = 0; $i < count($idlistA); $i++) {
             $idBExist = $idlistB->search($idlistA[$i]);
             if (!($idBExist === false)) {
                 $btVal = $collectionB->where('idlist_b', $idlistA[$i])->first()->get('break_time');
+                //ddd($btVal);
                 $totalCollection[$i] = $collectionA[$i]->put('break_time', $btVal);
             } else {
                 $totalCollection[$i] = $collectionA[$i]->put('break_time', '00:00:00');
@@ -120,12 +122,13 @@ if (! function_exists('searchAttePsn')) {
         $forNum = (count($dateList));
         if ($psnAtte->isNotEmpty()) {
             for ($i = 0; $i < $forNum; $i++) {
+                //if($i == 1) {ddd($forNum);}
                 $psnStrt = new Carbon($psnAtte->whereNotNull('start_working')->pluck('start_working')->get($i));
                 $psnEnd = new Carbon($psnAtte->whereNotNull('end_working')->pluck('end_working')->get($i));
                 //$psnEnd = new Carbon($psnAtte->whereNotNull('end_working')->where('date',$dateList[$i])->value('end_working'));
                 $psnDate = new Carbon($dateList[$i]);
                 $workTime = $psnStrt->diff($psnEnd);
-                $dailyData = collect(['start_work' => $psnStrt->format('H:i:s'), 'end_work' => $psnEnd->format('H:i:s'), 'date' => $psnDate->format('Y:m:d'), 'work_time' => $workTime->format('%H:%I:%S')]);
+                $dailyData = collect(['idlist_a' => $dateList[$i], 'start_work' => $psnStrt->format('H:i:s'), 'end_work' => $psnEnd->format('H:i:s'), 'date' => $psnDate->format('Y-m-d'), 'work_time' => $workTime->format('%H:%I:%S')]);
                 $dataSet[$i] = $dailyData;
             }
         } else {
@@ -153,17 +156,21 @@ if (! function_exists('searchBreakPsn')) {
         if ($psnBreak->isNotEmpty()) {
             for ($i = 0; $i < count($dateList); $i++) {
                 $dailyBreak = $psnBreak->where('date', $dateList[$i]);
-                $dailyBreakSecond = 0;
+                //if($i==2){ddd($dailyBreak);}
+                $dailyBreakSeconds = 0;
                 for ($j = 0; $j < count($dailyBreak) / 2; $j++) {
                     $startBreak = new Carbon($dailyBreak->whereNotNull('start_break')->pluck('start_break')->get($j));
                     $endBreak = new Carbon($dailyBreak->whereNotNull('end_break')->pluck('end_break')->get($j));
                     $startUnixTime = $startBreak->getTimestamp();
                     $endUnixTime = $endBreak->getTimestamp();
-                    $breakSecond = $endUnixTime - $startUnixTime;
-                    $dailyBreakSecond += $breakSecond;
+                    $breakSeconds = $endUnixTime - $startUnixTime;
+                    $dailyBreakSeconds += $breakSeconds;
                 }
-                $date = $dailyBreak->first()->get('date');
-                $dailyBreak = new DateInterval("PT{$dailyBreakSecond}S");
+                $date = $dailyBreak->first()->date;
+                $displaySeconds = (int)$dailyBreakSeconds % 60;
+                $displayMinutes = floor($dailyBreakSeconds / 60);
+                $displayHours = floor($displayMinutes / 60);
+                $dailyBreak = new DateInterval("PT{$displayHours}H{$displayMinutes}M{$displaySeconds}S");
                 $dailyData = collect(['idlist_b' => $date, 'break_time' => $dailyBreak->format('%H:%I:%S')]);
                 $dataSet[$i] = $dailyData;
             }

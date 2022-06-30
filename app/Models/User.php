@@ -20,13 +20,13 @@ class User extends Authenticatable
   protected $guarded = [
     'id',
     'created_at',
+    'update_at',
   ];
 
   protected $fillable = [
     'name',
     'email',
     'password',
-    'update_at',
   ];
 
   /**

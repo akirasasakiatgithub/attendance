@@ -2,21 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Attendance;
 use App\Models\Rest;
 
 class RestController extends Controller
 {
-    //carbonで現在時刻取得
     public function startBreak()
     {
         $user = Auth::user();
         $startBreakTime = Carbon::now();
-        Rest::insert([
-            'date' => $startBreakTime,
-            'start_break' => $startBreakTime,
+        $rest = new Rest;
+        $attendance = new Attendance;
+        $attendance->validateAtWork($startBreakTime);
+        $rest->validateEndBreak($startBreakTime);
+        $attendance->validateNotEndWork($startBreakTime);
+        Rest::create([
+            'date' => $startBreakTime->format('Y-m-d'),
+            'start_break' => $startBreakTime->format('Y-m-d H:i:s'),
             'id_u' => $user->id
         ]);
         return redirect('/');
@@ -26,9 +30,14 @@ class RestController extends Controller
     {
         $user = Auth::user();
         $endBreakTime = Carbon::now();
-        Rest::insert([
-            'date' => $endBreakTime,
-            'end_break' => $endBreakTime,
+        $rest = new Rest;
+        $attendance = new Attendance;
+        $rest->validateStartBreak($endBreakTime);
+        $attendance->validateAtWork($endBreakTime);
+        $attendance->validateNotEndWork($endBreakTime);
+        Rest::create([
+            'date' => $endBreakTime->format('Y-m-d'),
+            'end_break' => $endBreakTime->format('Y-m-d H:i:s'),
             'id_u' => $user->id
         ]);
         return redirect('/');

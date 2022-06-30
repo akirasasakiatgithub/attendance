@@ -12,24 +12,25 @@
     </form>
     <table>
       <tr>
-        <th>勤務日</th>
-        <th>勤務開始</th>
-        <th>勤務終了</th>
-        <th>休憩時間</th>
-        <th>勤務時間</th>
+        <th><a href="/person?sort=date" class="">勤務日</a></th>
+        <th><a href="/person?sort=start_work" class="">勤務開始</a></th>
+        <th><a href="/person?sort=end_work" class="">勤務終了</a></th>
+        <th><a href="/person?sort=break_time" class="">休憩時間</a></th>
+        <th><a href="/person?sort=work_time" class="">勤務時間</a></th>
       </tr>
-      @isset($attes)
-      @foreach($attes as $atte)
+      @isset($items)
+      @foreach($items as $item)
       <tr>
-        <td>{{$atte['date']}}</td>
-        <td>{{$atte['start_work']}}</td>
-        <td>{{$atte['end_work']}}</td>
-        <td>{{$atte['break_time']}}</td>
-        <td>{{$atte['work_time']}}</td>
+        <td>{{$item['date']}}</td>
+        <td>{{$item['start_work']}}</td>
+        <td>{{$item['end_work']}}</td>
+        <td>{{$item['break_time']}}</td>
+        <td>{{$item['work_time']}}</td>
       </tr>
       @endforeach
       @endisset
     </table>
+    {{ $items->appends(['sort' => $sort])->links() }}
   </div>
 </main>
 @endsection
