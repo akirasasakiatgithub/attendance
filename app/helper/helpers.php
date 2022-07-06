@@ -33,6 +33,7 @@ if (!function_exists('adjustAttendance')) {
             $dataSet = null;
         }
         //:([[int idlist[$i], string $userName, DateTime $startWork, DateTime $endWork, DateInterval $workTime]])
+        //ddd($dataSet);
         return $dataSet;
     }
 

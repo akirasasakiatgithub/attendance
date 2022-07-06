@@ -57,4 +57,12 @@ class Attendance extends Model
             throw ValidationException::withMessages(['start_working' => ['既に退勤登録しています。'],]);
         }
     }
+
+    /*public function
+    adjustAttendance(string $date)
+    {
+        $dailyAtte = self::where('date', $date)->paginate(5);
+        $dataSet = collect([]);
+        if
+    }*/
 }

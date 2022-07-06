@@ -55,21 +55,23 @@ class AttendanceController extends Controller
             $now = new Carbon();
             $date = $now->format('Y-m-d');               //string型の日時を代入
         }
-        $AtteList = adjustAttendance($date);
-        $BreakList = adjustBreak($date);
-        if ($AtteList) {
-            $totalList = connectCollection($AtteList, $BreakList)->sortBy($sort)->paginate(5);
-            ddd($totalList);
+        $atteList = adjustAttendance($date);
+        $breakList = adjustBreak($date);
+        $paginateInfo = Attendance::where('date', $date)->distinct('id_a')->paginate(5);
+        if ($atteList) {
+            $totalList = connectCollection($atteList, $breakList)->sortBy($sort);
             $param = [
                 'items' => $totalList,
                 'date' => $date,
-                'sort' => $sort
+                'sort' => $sort,
+                'paginateInfo' => $paginateInfo
             ];
         } else {
             $param = [
                 'items' => null,
                 'date' => $date,
-                'sort' => $sort
+                'sort' => $sort,
+                'paginateInfo' => $paginateInfo
             ];
         }
         return view ('attendanceList', $param);

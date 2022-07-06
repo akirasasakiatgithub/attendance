@@ -19,18 +19,25 @@
         <th><a href="/attendance?sort=work_time" class="">勤務時間</a></th>
       </tr>
       @isset($items)
-      @foreach($items as $item)
-      <tr>
-        <td>{{$item['name']}}</td>
-        <td>{{$item['start_work']}}</td>
-        <td>{{$item['end_work']}}</td>
-        <td>{{$item['break_time']}}</td>
-        <td>{{$item['work_time']}}</td>
-      </tr>
-      @endforeach
-      @endisset
+      <p hidden>{{$num = $paginateInfo->firstItem()-1}}</p>
+      @for($i = 0; $i < $paginateInfo->perPage(); $i++)
+        <tr>
+          @empty($items[$i + $num])
+          @break
+          @endempty
+          {{ddd($items)}}
+          <td>{{$items[$i + $num]['name']}}</td>
+          <td>{{$items[$i + $num]['start_work']}}</td>
+          <td>{{$items[$i + $num]['end_work']}}</td>
+          <td>{{$items[$i + $num]['break_time']}}</td>
+          <td>{{$items[$i + $num]['work_time']}}</td>
+        </tr>
+        @endfor
+        @endisset
     </table>
-    {{ $items->appends(['sort' => $sort])->links() }}
+    @isset($items)
+    {{ $paginateInfo->appends(['sort' => $sort])->links() }}
+    @endisset
   </div>
 </main>
 @endsection
