@@ -1,5 +1,6 @@
 <?php
 
+use App\ConvertPaginator\ConvertPaginatorToSearchResultModel;
 use App\Models\Attendance;
 use App\Models\Rest;
 use App\Models\User;
@@ -12,21 +13,32 @@ if (!function_exists('adjustAttendance')) {
      *
      * @param  string  $xxx
      */
-    function adjustAttendance(string $date)
+    function searchAttendance(string $date)
     {
+        // 検索対象日の全レコードを取得
         $dailyAtte = Attendance::where('date', $date)->get();
         $dataSet = collect([]);
+        // 全レコードから$idListAを元に個人ごとのレコードを取得。
         if ($dailyAtte->isNotEmpty()) {
             $idlistA = $dailyAtte->unique('id_u')->pluck('id_u');
             for ($i = 0; $i < count($idlistA); $i++) {
-                //$dailyAtteから$idlistA[i]でデータを引き出し
                 $personAtte = $dailyAtte->where('id_u', $idlistA[$i]);
                 $startWork = new Carbon($personAtte->whereNotNull('start_working')->pluck('start_working')->first());
-                $endWork = new Carbon($personAtte->whereNotNull('end_working')->pluck('end_working')->first());
-                //時間の計算
+                // 勤務終了時刻が存在しないの場合、現在時刻でCarbonインスタンスが生成されてしまう。
+                $getTimeValue = $personAtte->whereNotNull('end_working')->pluck('end_working')->first();
+                $endWork = new Carbon($getTimeValue);
+                //勤務時間の計算
                 $workTime = $startWork->diff($endWork);
                 $name = User::where('id', $idlistA[$i])->value('name');
-                $psnData = collect(['idlist_a' => $idlistA[$i], 'name' => $name, 'start_work' => $startWork->format('H:i:s'), 'end_work' => $endWork->format('H:i:s'), 'work_time' => $workTime->format('%H:%I:%S')]);
+                //勤務中の場合は勤務終了を---、勤務時間の後に（勤務中）と表示する。
+                if(isset($getTimeValue)) {
+                    $endWork = $endWork->format('H:i:s');
+                    $workTime = $workTime->format('%H:%I:%S');
+                } else {
+                    $endWork = '---';
+                    $workTime =  $workTime->format('%H:%I:%S') . '（勤務中）';
+                }
+                $psnData = collect(['idlist_a' => $idlistA[$i], 'name' => $name, 'start_work' => $startWork->format('H:i:s'), 'end_work' => $endWork, 'work_time' => $workTime]);
                 $dataSet[$i] = $psnData;
             }
         } else {
@@ -45,19 +57,26 @@ if (!function_exists('adjustBreak')) {
      *
      * @param  string  $xxx
      */
-    function adjustBreak(string $date)
+    function searchBreak(string $date)
     {
         $dailyBreak = Rest::where('date', $date)->get();
         $dataSet = collect([]);
         if ($dailyBreak->isNotEmpty()) {
             $idlistB = $dailyBreak->unique('id_u')->pluck('id_u');
             for ($i = 0; $i < count($idlistB); $i++) {
-                $personBreak = $dailyBreak->where('id_u', $idlistB[$i]);             //$dailyBreakから$idlistB[i]でデータを引き出し
                 //！※休憩は何度でもとってよいことに留意！
+                //個人の全休憩レコードを取得
+                $personBreak = $dailyBreak->where('id_u', $idlistB[$i]);
                 $totalBreakSeconds = 0;
-                $breakNum = (count($personBreak) / 2);
+                //$personBreakの個数が奇数になる人（現在休憩中の人）のための分岐
+                if(count($personBreak) % 2 == 0) {
+                    $breakNum = (count($personBreak) / 2);
+                } else {
+                    $breakNum = ((count($personBreak) + 1) / 2);
+                }
                 for ($j = 0; $j < $breakNum; $j++) {
                     $startBreak = new Carbon($personBreak->whereNotNull('start_break')->pluck('start_break')->get($j));
+                    // 休憩終了がnull（休憩中）の場合、閲覧時刻でCarbonインスタンス生成　→　閲覧の時点での総休憩時間を表示
                     $endBreak = new Carbon($personBreak->whereNotNull('end_break')->pluck('end_break')->get($j));
                     $startUnixTime = $startBreak->getTimestamp();
                     $endUnixTime = $endBreak->getTimestamp();
@@ -125,11 +144,21 @@ if (! function_exists('searchAttePsn')) {
             for ($i = 0; $i < $forNum; $i++) {
                 //if($i == 1) {ddd($forNum);}
                 $psnStrt = new Carbon($psnAtte->whereNotNull('start_working')->pluck('start_working')->get($i));
-                $psnEnd = new Carbon($psnAtte->whereNotNull('end_working')->pluck('end_working')->get($i));
+                //勤務中の人の為に、①で条件を分岐
+                $getTimeValue = $psnAtte->whereNotNull('end_working')->pluck('end_working')->get($i);
+                $psnEnd = new Carbon($getTimeValue);
                 //$psnEnd = new Carbon($psnAtte->whereNotNull('end_working')->where('date',$dateList[$i])->value('end_working'));
                 $psnDate = new Carbon($dateList[$i]);
                 $workTime = $psnStrt->diff($psnEnd);
-                $dailyData = collect(['idlist_a' => $dateList[$i], 'start_work' => $psnStrt->format('H:i:s'), 'end_work' => $psnEnd->format('H:i:s'), 'date' => $psnDate->format('Y-m-d'), 'work_time' => $workTime->format('%H:%I:%S')]);
+                // ①
+                if(isset($getTimeValue)) {
+                    $psnEnd = $psnEnd->format('H:i:s');
+                    $workTime = $workTime->format('%H:%I:%S');
+                } else {
+                    $psnEnd = '---';
+                    $workTime = $workTime->format('%H:%I:%S') . '勤務中';
+                }
+                $dailyData = collect(['idlist_a' => $dateList[$i], 'start_work' => $psnStrt->format('H:i:s'), 'end_work' => $psnEnd, 'date' => $psnDate->format('Y-m-d'), 'work_time' => $workTime]);
                 $dataSet[$i] = $dailyData;
             }
         } else {
@@ -159,9 +188,17 @@ if (! function_exists('searchBreakPsn')) {
                 $dailyBreak = $psnBreak->where('date', $dateList[$i]);
                 //if($i==2){ddd($dailyBreak);}
                 $dailyBreakSeconds = 0;
-                for ($j = 0; $j < count($dailyBreak) / 2; $j++) {
+                //$dailyBreakの個数が奇数になる場合（現在休憩中の場合）のための分岐
+                if (count($dailyBreak) % 2 == 0) {
+                    $breakNum = (count($dailyBreak) / 2);
+                } else {
+                    $breakNum = ((count($dailyBreak) + 1) / 2);
+                }
+                for ($j = 0; $j < $breakNum; $j++) {
                     $startBreak = new Carbon($dailyBreak->whereNotNull('start_break')->pluck('start_break')->get($j));
-                    $endBreak = new Carbon($dailyBreak->whereNotNull('end_break')->pluck('end_break')->get($j));
+                    // 休憩終了がnull（休憩中）の場合、閲覧時刻でCarbonインスタンス生成　→　閲覧の時点での総休憩時間を表示
+                    $getTimeValue = $dailyBreak->whereNotNull('end_break')->pluck('end_break')->get($j);
+                    $endBreak = new Carbon($getTimeValue);
                     $startUnixTime = $startBreak->getTimestamp();
                     $endUnixTime = $endBreak->getTimestamp();
                     $breakSeconds = $endUnixTime - $startUnixTime;
@@ -179,5 +216,19 @@ if (! function_exists('searchBreakPsn')) {
             $dataSet = Null;
         }
         return $dataSet;
+    }
+}
+
+if (! function_exists('search')) {
+    /**
+     * 関数の説明文
+     *
+     * @param  string  $xxx
+     */
+    function search($perPage, $date)
+    {
+        $searchResult = Attendance::where('date', $date)->paginate($perPage);
+        $convertSearchResult = new ConvertPaginatorToSearchResultModel($searchResult);
+        return $convertSearchResult;
     }
 }

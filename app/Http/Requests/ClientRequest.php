@@ -2,11 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\CheckAtWork;
-use App\Rules\CheckBeforeWork;
-use App\Rules\CheckEndBreak;
-use App\Rules\CheckNotEndWork;
-use App\Rules\CheckStartBreak;
+use App\Rules\ValidateEmail;
+use App\Rules\ValidatePassword;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ClientRequest extends FormRequest
@@ -18,7 +15,7 @@ class ClientRequest extends FormRequest
      */
     public function authorize()
     {
-        if ($this->path() == ('/' || '/register' || '/login' || '/attendance/start' || '/attendance/end' || 'break/start' || 'break/end')) {
+        if ($this->path() == 'login') {
             return true;
         } else {
             return false;
@@ -33,13 +30,20 @@ class ClientRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'email' => 'required|email',
-            'password' => 'digits_between:8,20',
-            'start_working' => [new CheckBeforeWork],
-            'end_working' => [new CheckNotEndWork, new CheckAtWork, new CheckEndBreak],
-            'start_break' => [new CheckEndBreak, new CheckAtWork, new CheckNotEndWork],
-            'end_break' => [new CheckStartBreak, new CheckAtWork, new CheckNotEndWork]
+            'email' => 'required|string|email|max:255',
+            'password' => 'required|between:8,20',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'email.required' => 'メールアドレスが入力されていません。',
+            'email.string' => 'メールアドレスが文字列ではありません。',
+            'email.email' => 'メールアドレスの形式ではありません。',
+            'email.max:255' => 'メールアドレスが長すぎます。',
+            'password.required' => 'パスワードが入力されていません。',
+            'password.between:8,20' => 'パスワードは8~20文字でお願いします。',
         ];
     }
 }

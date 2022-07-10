@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Http\Requests\ClientRequest;
+use App\Rules\ValidateEmail;
+use App\Rules\ValidatePassword;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -18,7 +22,7 @@ class AuthController extends Controller
         return view('register');
     }
     //try文確認
-    public function postRegister(Request $request)
+    public function postRegister(ClientRequest $request)
     {
         try {
             $user = User::create([
@@ -29,7 +33,7 @@ class AuthController extends Controller
 
             return view('login');
         } catch (\Throwable $th) {
-            return view('register', ['txt' => '登録に失敗しました。']);
+            return view('register', ['message' => '登録に失敗しました。']);
         }
     }
 
@@ -38,7 +42,7 @@ class AuthController extends Controller
         return view('login');
     }
 
-    public function postLogin(Request $request)
+    public function postLogin(ClientRequest $request)
     {
         $email = $request->email;
         $password = $request->password;
@@ -46,7 +50,7 @@ class AuthController extends Controller
         if (Auth::attempt($credidentials)) {
             return redirect('/');
         } else {
-            return view('login');
+            return view('login', [ 'message' => 'パスワードまたはメールアドレスが間違っています。']);
         }
     }
 

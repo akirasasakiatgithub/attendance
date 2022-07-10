@@ -55,9 +55,10 @@ class AttendanceController extends Controller
             $now = new Carbon();
             $date = $now->format('Y-m-d');               //string型の日時を代入
         }
-        $atteList = adjustAttendance($date);
-        $breakList = adjustBreak($date);
-        $paginateInfo = Attendance::where('date', $date)->distinct('id_a')->paginate(5);
+        $atteList = searchAttendance($date);
+        $breakList = searchBreak($date);
+        $perPage = 5;
+        $paginateInfo = Attendance::where('date', $date)->distinct('id_a')->paginate($perPage);
         if ($atteList) {
             $totalList = connectCollection($atteList, $breakList)->sortBy($sort);
             $param = [
@@ -74,7 +75,7 @@ class AttendanceController extends Controller
                 'paginateInfo' => $paginateInfo
             ];
         }
-        return view ('attendanceList', $param);
+        return view('attendanceList', $param);
     }
 
     public function getPersonAttendance(Request $request)
@@ -89,7 +90,8 @@ class AttendanceController extends Controller
         $psnAtteList = searchAttePsn($user);
         $psnBreakList = searchBreakPsn($user);
         if ($psnAtteList) {
-            $totalList = connectCollection($psnAtteList, $psnBreakList)->sortBy($sort)->paginate(5);
+            $perPage = 5;
+            $totalList = connectCollection($psnAtteList, $psnBreakList)->sortBy($sort)->paginate($perPage);
             $param = [
                 'items' => $totalList,
                 'name' => $user->name,
@@ -102,7 +104,7 @@ class AttendanceController extends Controller
                 'sort' => $sort
             ];
         }
-        return view ('personAttendanceList', $param);
+        return view('personAttendanceList', $param);
     }
 
     public function test()

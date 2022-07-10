@@ -29,6 +29,10 @@ class ConvertPaginatorToSearchResultModel extends BaseConvertPaginator {
     private function init()
     {
         $retDetails = [];
+        $dailyAtte = $this->__originPaginator;
+        if ($dailyAtte->isNotEmpty()) {
+            $idlistA = $dailyAtte->unique('id_u')->pluck('id_u');
+        }
         foreach($this->__originPaginator as $detailInfo)
         {
             $table1 = $detailInfo;

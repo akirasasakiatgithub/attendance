@@ -51,10 +51,22 @@
   <h1 class="heading">会員登録</h1>
   <form action="/register" method="post" class="form">
     @csrf
+    @error('name')
+    <p class='error'>ERROR</p>
+    <p class='error message'>{{$message}}</p>
+    @enderror
     <input type="text" name="name" placeholder="名前">
+    @error('email')
+    <p class='error'>ERROR</p>
+    <p class='error message'>{{$message}}</p>
+    @enderror
     <input type="text" name="email" placeholder="メールアドレス">
+    @error('password')
+    <p class='error'>ERROR</p>
+    <p class='error message'>{{$message}}</p>
+    @enderror
     <input type="text" name="password" placeholder="パスワード">
-    <input type="text" name="password" placeholder="確認用パスワード">
+    <input type="text" name="password_confirmation" placeholder="確認用パスワード">
     <button class="submit_btn">会員登録</button>
   </form>
   <div class="login_wrap">

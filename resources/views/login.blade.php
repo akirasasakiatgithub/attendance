@@ -84,16 +84,27 @@
   }
 </style>
 <!--ログイン失敗時、ログアウト時の表示をさせる-->
-  <div class="container">
-    <h1 class="heading">ログイン</h1>
-    <form action="/login" method="post" class="form">
-      @csrf
-      <input type="text" name="email" placeholder="メールアドレス">
-      <input type="text" name="password" placeholder="パスワード">
-      <button class="submit_btn">ログイン</button>
-    </form>
-    <div class="register_wrap">
-      <p>アカウントをお持ちでない方はこちらから</p>
-      <a href="/register">会員登録</a>
-    </div>
+<div class="container">
+  <h1 class="heading">ログイン</h1>
+  <form action="/login" method="post" class="form">
+    @csrf
+    @isset($message)
+    <p hidden>{{$message}}</p>
+    @endisset
+    @error('email')
+    <p class='error'>ERROR</p>
+    <p class='error message'>{{$message}}</p>
+    @enderror
+    <input type="text" name="email" placeholder="メールアドレス">
+    @error('password')
+    <p class='error'>ERROR</p>
+    <p class='error message'>{{$message}}</p>
+    @enderror
+    <input type="text" name="password" placeholder="パスワード">
+    <button class="submit_btn">ログイン</button>
+  </form>
+  <div class="register_wrap">
+    <p>アカウントをお持ちでない方はこちらから</p>
+    <a href="/register">会員登録</a>
   </div>
+</div>

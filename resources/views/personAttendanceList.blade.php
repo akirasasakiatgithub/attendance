@@ -12,11 +12,11 @@
     </form>
     <table>
       <tr>
-        <th><a href="/person?sort=date" class="">勤務日</a></th>
-        <th><a href="/person?sort=start_work" class="">勤務開始</a></th>
-        <th><a href="/person?sort=end_work" class="">勤務終了</a></th>
-        <th><a href="/person?sort=break_time" class="">休憩時間</a></th>
-        <th><a href="/person?sort=work_time" class="">勤務時間</a></th>
+        <th><a class="">勤務日</a></th>
+        <th><a class="">勤務開始</a></th>
+        <th><a class="">勤務終了</a></th>
+        <th><a class="">休憩時間</a></th>
+        <th><a class="">勤務時間</a></th>
       </tr>
       @isset($items)
       @foreach($items as $item)
@@ -30,7 +30,7 @@
       @endforeach
       @endisset
     </table>
-    {{ $items->appends(['sort' => $sort])->links() }}
+    {{ $items->links() }}
   </div>
 </main>
 @endsection
