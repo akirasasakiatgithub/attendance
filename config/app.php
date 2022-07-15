@@ -162,6 +162,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         App\Providers\MacroServiceProvider::class,
+        App\Providers\testStampProvider::class,
 
         /*
          * Package Service Providers...

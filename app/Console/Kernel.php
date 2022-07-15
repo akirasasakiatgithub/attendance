@@ -2,8 +2,15 @@
 
 namespace App\Console;
 
+use App\Jobs\automaticStamp;
+use App\Jobs\testStamp;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Models\Rest;
+use App\Models\Attendance;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+
 
 class Kernel extends ConsoleKernel
 {
@@ -24,7 +31,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $id = Auth::id();
+            $schedule->call(new testStamp($id))->everyMinute();
     }
 
     /**

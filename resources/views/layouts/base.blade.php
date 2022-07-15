@@ -109,8 +109,8 @@
   <nav class="nav">
     <ul class="nav_list">
       <li class="nav_item"><a href="/">ホーム</a></li>
-      <li class="nav_item"><a href="{{ route('atte') }}">勤務一覧</a></li>
-      <li class="nav_item"><a href="{{ route('person_atte')}}">個人勤務一覧</a></li>
+      <li class="nav_item"><a href="{{ route('atte', ['num' => 1]) }}">勤務一覧</a></li>
+      <li class="nav_item"><a href="{{ route('person_atte', ['num' => 1]) }}">個人勤務一覧</a></li>
       <li class="nav_item"><a href="{{ route('logout') }}">ログアウト</a></li>
     </ul>
   </nav>

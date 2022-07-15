@@ -89,7 +89,7 @@
   <form action="/login" method="post" class="form">
     @csrf
     @isset($message)
-    <p hidden>{{$message}}</p>
+    <p>{{$message}}</p>
     @endisset
     @error('email')
     <p class='error'>ERROR</p>

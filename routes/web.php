@@ -25,10 +25,9 @@ Route::get('/logout', [AuthController::class, 'getLogout'])->name('logout');
 Route::get('/', [AttendanceController::class, 'getIndex'])->name('index')->middleware('auth');
 Route::get('/attendance/start', [AttendanceController::class, 'startAttendance']);
 Route::get('/attendance/end', [AttendanceController::class, 'endAttendance']);
-//本番は/attendance/{num}で登録
-Route::get('/attendance', [AttendanceController::class, 'getAttendance'])->name('atte');
+Route::get('/attendance/{num}', [AttendanceController::class, 'getAttendance'])->name('atte');
 Route::post('/attendance', [AttendanceController::class, 'getAttendance']);
-Route::get('/person', [AttendanceController::class, 'getPersonAttendance'])->name('person_atte');
+Route::get('/person/{num}', [AttendanceController::class, 'getPersonAttendance'])->name('person_atte');
 Route::post('/person', [AttendanceController::class, 'getPersonAttendance']);
 Route::get('/break/start', [RestController::class, 'startBreak']);
 Route::get('/break/end', [RestController::class, 'endBreak']);

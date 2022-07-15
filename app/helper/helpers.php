@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 use App\ConvertPaginator\ConvertPaginatorToSearchResultModel;
 use App\Models\Attendance;
