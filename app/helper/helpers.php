@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use App\ConvertPaginator\ConvertPaginatorToSearchResultModel;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Attendance;
 use App\Models\Rest;
 use App\Models\User;
@@ -125,41 +126,56 @@ if (! function_exists('connectCollection')) {
 
 if (! function_exists('searchAttePsn')) {
     /**
-     * 関数の説明文
+     * ログインしている人の勤怠記録を表示する
      *
-     * @param  string  $xxx
+     * @param  object $user  string $date
      */
     function searchAttePsn($user, $date = 'all')
     {
-        $psnId = User::where('email', $user->email)->first()->id;
-        //->value('id')で違う人のIDが出てくる理由を聞く
+        //現在ログインしている人のidでモデルからこれまでの勤怠記録（休憩除く）を全て取得
+        $psnId = Auth::id();
         $psnAtte = Attendance::where('id_u', $psnId)->get();
+
+        //日にちで検索した場合は、引数で与えられた日にちで絞り込み
         if (!($date === 'all')) {
             $psnAtte = $psnAtte->where('date', $date);
         }
+
+        //日ごとに出勤・退勤のレコードがあるので、それらをまとめて出勤日のカラムの値を順に引き出し
         $dateList = $psnAtte->unique('date')->pluck('date');
         $dataSet = collect([]);
+
+        //for文を回す回数
         $forNum = (count($dateList));
+        //$forNumの値は意図通り
         // ddd($forNum);
+
+        //これまでの勤務記録があれば、for文内で分類、計算
         if ($psnAtte->isNotEmpty()) {
             for ($i = 0; $i < $forNum; $i++) {
-                //if($i == 1) {ddd($forNum);}
+                //出勤時間のカラムから値を順に引き出し,その値でCarbonインスタンス生成
                 $psnStrt = new Carbon($psnAtte->whereNotNull('start_working')->pluck('start_working')->get($i));
+                //退勤時間のカラムから値を順に引き出し,その値でCarbonインスタンス生成
                 //勤務中の人の為に、①で条件を分岐
                 $getTimeValue = $psnAtte->whereNotNull('end_working')->pluck('end_working')->get($i);
                 $psnEnd = new Carbon($getTimeValue);
-                //$psnEnd = new Carbon($psnAtte->whereNotNull('end_working')->where('date',$dateList[$i])->value('end_working'));
+                //出勤日のカラムから値を順に引き出し,その値でCarbonインスタンス生成
                 $psnDate = new Carbon($dateList[$i]);
+                //出勤時間と退勤時間の差で勤務時間を計算
                 $workTime = $psnStrt->diff($psnEnd);
-                // ①
+
+                // ①退勤時間の値があれば退勤時間と勤務時間を記録
                 if(isset($getTimeValue)) {
                     $psnEnd = $psnEnd->format('H:i:s');
                     $workTime = $workTime->format('%H:%I:%S');
                 } else {
+                //退勤時間の値が無い（勤務中）なら、それぞれ以下のように記録
                     $psnEnd = '---';
                     $workTime = $workTime->format('%H:%I:%S') . '勤務中';
                 }
-                $dailyData = collect(['idlist_a' => $dateList[$i], 'start_work' => $psnStrt->format('H:i:s'), 'end_work' => $psnEnd, 'date' => $psnDate->format('Y-m-d'), 'work_time' => $workTime]);
+                //一日の出勤日、出勤時間、退勤時間、勤務時間のリストをコレクションにする。
+                $dailyData = collect(['idlist_a' => $dateList[$i], 'start_work' => $psnStrt->format('H:i:s'), 'end_work' => $psnEnd, 'work_time' => $workTime]);
+                //コレクションを配列に加えていく。
                 $dataSet[$i] = $dailyData;
             }
         } else {

@@ -21,7 +21,7 @@
       @isset($items)
       @foreach($items as $item)
       <tr>
-        <td>{{$item['date']}}</td>
+        <td>{{$item['idlist_a']}}</td>
         <td>{{$item['start_work']}}</td>
         <td>{{$item['end_work']}}</td>
         <td>{{$item['break_time']}}</td>
