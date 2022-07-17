@@ -99,6 +99,7 @@ class AttendanceController extends Controller
                 count($totalLists),
                 $perPage,
                 $request->page,
+                array('path' => $request->url()),
             );
             $param = [
                 'items' => $totalLists,

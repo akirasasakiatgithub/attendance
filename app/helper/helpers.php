@@ -25,7 +25,6 @@ if (!function_exists('adjustAttendance')) {
             for ($i = 0; $i < count($idlistA); $i++) {
                 $personAtte = $dailyAtte->where('id_u', $idlistA[$i]);
                 $startWork = new Carbon($personAtte->whereNotNull('start_working')->pluck('start_working')->first());
-                // 勤務終了時刻が存在しないの場合、現在時刻でCarbonインスタンスが生成されてしまう。
                 $getTimeValue = $personAtte->whereNotNull('end_working')->pluck('end_working')->first();
                 $endWork = new Carbon($getTimeValue);
                 //勤務時間の計算
@@ -141,6 +140,7 @@ if (! function_exists('searchAttePsn')) {
         $dateList = $psnAtte->unique('date')->pluck('date');
         $dataSet = collect([]);
         $forNum = (count($dateList));
+        // ddd($forNum);
         if ($psnAtte->isNotEmpty()) {
             for ($i = 0; $i < $forNum; $i++) {
                 //if($i == 1) {ddd($forNum);}
