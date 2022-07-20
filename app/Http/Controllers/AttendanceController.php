@@ -86,11 +86,13 @@ class AttendanceController extends Controller
         $user = Auth::user();
         if ($request->date) {
             $date = $request->date;
-            $psnAtteList = searchAttePsn($user, $date);
-            $psnBreakList = searchBreakPsn($user, $date);
+            $psnAtteList = searchAttePsn($date);
+            $psnBreakList = searchBreakPsn($date);
+        } else {
+            $psnAtteList = searchAttePsn();
+            $psnBreakList = searchBreakPsn();
         }
-        $psnAtteList = searchAttePsn($user);
-        $psnBreakList = searchBreakPsn($user);
+
         if ($psnAtteList) {
             $perPage = 5;
             $totalLists = connectCollection($psnAtteList, $psnBreakList);

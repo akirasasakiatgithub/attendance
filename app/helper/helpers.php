@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 use App\ConvertPaginator\ConvertPaginatorToSearchResultModel;
 use Illuminate\Support\Facades\Auth;
@@ -130,24 +129,24 @@ if (! function_exists('searchAttePsn')) {
      *
      * @param  object $user  string $date
      */
-    function searchAttePsn($user, $date = 'all')
+    function searchAttePsn($date = false)
     {
         //現在ログインしている人のidでモデルからこれまでの勤怠記録（休憩除く）を全て取得
-        $psnId = Auth::id();
-        $psnAtte = Attendance::where('id_u', $psnId)->get();
-
         //日にちで検索した場合は、引数で与えられた日にちで絞り込み
-        if (!($date === 'all')) {
-            $psnAtte = $psnAtte->where('date', $date);
-        }
-
+        $psnId = Auth::id();
+        $psnAtte = Attendance::where('id_u', $psnId)->when($date, function($query, $date) {
+            return $query->where('date', $date);
+        }, function($query) {
+            return $query;
+        })
+        ->get();
         //日ごとに出勤・退勤のレコードがあるので、それらをまとめて出勤日のカラムの値を順に引き出し
         $dateList = $psnAtte->unique('date')->pluck('date');
         $dataSet = collect([]);
 
         //for文を回す回数
         $forNum = (count($dateList));
-        //$forNumの値は意図通り
+        //$forNumの値は意図通り1
         // ddd($forNum);
 
         //これまでの勤務記録があれば、for文内で分類、計算
@@ -159,8 +158,6 @@ if (! function_exists('searchAttePsn')) {
                 //勤務中の人の為に、①で条件を分岐
                 $getTimeValue = $psnAtte->whereNotNull('end_working')->pluck('end_working')->get($i);
                 $psnEnd = new Carbon($getTimeValue);
-                //出勤日のカラムから値を順に引き出し,その値でCarbonインスタンス生成
-                $psnDate = new Carbon($dateList[$i]);
                 //出勤時間と退勤時間の差で勤務時間を計算
                 $workTime = $psnStrt->diff($psnEnd);
 
@@ -191,9 +188,9 @@ if (! function_exists('searchBreakPsn')) {
      *
      * @param  string  $xxx
      */
-    function searchBreakPsn($user, $date = 'all')
+    function searchBreakPsn($date = 'all')
     {
-        $psnId = User::where('email', $user->email)->first()->id;
+        $psnId = Auth::id();
         $psnBreak = Rest::where('id_u', $psnId)->get();
         if (!($date === 'all')) {
             $psnBreak = $psnBreak->where('date', $date);

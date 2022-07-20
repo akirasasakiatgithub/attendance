@@ -104,6 +104,9 @@
   }
 </style>
 
+<head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
 <header class="header character">
   <h1>Atte</h1>
   <nav class="nav">

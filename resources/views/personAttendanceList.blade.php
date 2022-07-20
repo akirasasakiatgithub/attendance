@@ -30,7 +30,7 @@
       @endforeach
       @endisset
     </table>
-    {{ $items->links() }}
+    {{ $items->links('vendor.pagination.bootstrap-4') }}
   </div>
 </main>
 @endsection

@@ -31,7 +31,7 @@
 			@endisset
 		</table>
 		@isset($items)
-		{{ $items->links() }}
+		{{ $items->links('vendor.pagination.bootstrap-4') }}
 		@endisset
 	</div>
 </main>

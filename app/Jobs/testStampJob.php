@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Rest;
 use Carbon\Carbon;
 
-class testStamp implements ShouldQueue
+class testStampJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -39,6 +39,7 @@ class testStamp implements ShouldQueue
     
     public function handle()
     {
+        //休憩時間記録用のモデルに休憩開始時刻を打刻
         $now = Carbon::now();
         Rest::create([
             'date' => $now->format('Y-m-d'),
@@ -46,9 +47,10 @@ class testStamp implements ShouldQueue
             'id_u' => $this->id,
         ]);
 
+        //開始時刻に1秒加えて休憩終了時刻を打刻
         Rest::create([
             'date' => $now->addSecond()->format('Y-m-d'),
-            'start_break' => $now->format('Y-m-d H:i:s'),
+            'end_break' => $now->format('Y-m-d H:i:s'),
             'id_u' => Auth::id()
         ]);
     }
