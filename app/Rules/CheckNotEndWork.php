@@ -29,7 +29,7 @@ class CheckNotEndWork implements Rule
      */
     public function passes($attribute, $value)
     {
-        $result = Attendance::where('date', $this->now->format('Y:m:d'))->whereNotNull('end_working')->where('id_u', $this->id)->doesntExist();
+        $result = Attendance::where('date', $this->now->format('Y:m:d'))->whereNotNull('end_working')->where('user_id', $this->id)->doesntExist();
         return isset($result);
     }
 

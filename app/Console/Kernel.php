@@ -4,11 +4,13 @@ namespace App\Console;
 
 use App\Jobs\automaticStamp;
 use App\Jobs\testStampJob;
+use App\Jobs\testEveryMinutesStampJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use App\Model\Rest;
+use App\Models\Rest;
 use App\Models\Attendance;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 
@@ -31,8 +33,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $id = Auth::id();
-            $schedule->call(new testStampJob($id))->everyMinute();
+        $schedule->call(new automaticStamp())->daily();
     }
 
     /**

@@ -12,13 +12,13 @@ class Attendance extends Model
     use HasFactory;
 
     protected $guarded = [
-        'id_a',
+        'id',
         'created_at',
         'update_at',
     ];
 
     protected $fillable = [
-        'id_u',
+        'user_id',
         'date',
         'start_working',
         'end_working',
@@ -26,17 +26,22 @@ class Attendance extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo(User::class);
+    }
+
+    public function rests()
+    {
+        return $this->hasMany(Rest::class);
     }
 
     public static $rules = array(
         'date' => 'required',
-        'id_u' => 'required',
+        'user_id' => 'required',
     );
 
     public function validateBeforeWork($now): void
     {
-        $result = self::query()->where('date', $now->format('Y:m:d'))->whereNotNull('start_working')->where('id_u', Auth::id())->exists();
+        $result = self::query()->where('date', $now->format('Y:m:d'))->whereNotNull('start_working')->where('user_id', Auth::id())->exists();
         if ($result) {
             throw ValidationException::withMessages(['start_working' => ['既に出勤登録しています。'],]);
         }
@@ -44,7 +49,7 @@ class Attendance extends Model
 
     public function validateAtWork($now): void
     {
-        $result = self::query()->where('date', $now->format('Y:m:d'))->whereNotNull('start_working')->where('id_u', Auth::id())->doesntExist();
+        $result = self::query()->where('date', $now->format('Y:m:d'))->whereNotNull('start_working')->where('user_id', Auth::id())->doesntExist();
         if ($result) {
             throw ValidationException::withMessages(['start_working' => ['未だ出勤登録していません。'],]);
         }
@@ -52,7 +57,7 @@ class Attendance extends Model
 
     public function validateNotEndWork($now): void
     {
-        $result = self::query()->where('date', $now->format('Y:m:d'))->whereNotNull('end_working')->where('id_u', Auth::id())->exists();
+        $result = self::query()->where('date', $now->format('Y:m:d'))->whereNotNull('end_working')->where('user_id', Auth::id())->exists();
         if ($result) {
             throw ValidationException::withMessages(['start_working' => ['既に退勤登録しています。'],]);
         }

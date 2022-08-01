@@ -29,8 +29,8 @@ class CheckStartBreak implements Rule
      */
     public function passes($attribute, $value)
     {
-        $lastStartBreak = Rest::where('date', $this->now->format('Y:m:d'))->where('id_u', $this->id)->whereNotNull('start_break')->max('start_break');
-        $lastEndBreak = Rest::where('date', $this->now->format('Y:m:d'))->where('id_u', $this->id)->whereNotNull('end_break')->max('start_break');
+        $lastStartBreak = Rest::where('date', $this->now->format('Y:m:d'))->where('user_id', $this->id)->whereNotNull('start_break')->max('start_break');
+        $lastEndBreak = Rest::where('date', $this->now->format('Y:m:d'))->where('user_id', $this->id)->whereNotNull('end_break')->max('start_break');
         return $lastStartBreak > $lastEndBreak;
     }
 

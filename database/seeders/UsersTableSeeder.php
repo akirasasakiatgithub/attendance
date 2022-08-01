@@ -3,8 +3,12 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Factories\Sequence;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\User;
+use App\Models\Attendance;
+use App\Models\Rest;
+
 
 class UsersTableSeeder extends Seeder
 {
@@ -15,77 +19,22 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        $param = [
-            'name' => 'tony',
-            'email' => 'tony123@gmail.com',
-            'password' => Hash::make('DVFAsdfvsd')
-        ];
-        DB::table('users')->insert($param);
-        $param = [
-            'name' => 'jack',
-            'email' => 'jack123@gmail.com',
-            'password' => Hash::make('DVFAsdfvsd')
-        ];
-        DB::table('users')->insert($param);
-        $param = [
-            'name' => 'sara',
-            'email' => 'sara123@gmail.com',
-            'password' => Hash::make('DVFAsdfvsd')
-        ];
-        DB::table('users')->insert($param);
-        $param = [
-            'name' => 'saly',
-            'email' => 'saly123@gmail.com',
-            'password' => Hash::make('DVFAsdfvsd')
-        ];
-        DB::table('users')->insert($param);
-        $param = [
-            'name' => 'ryoichi',
-            'email' => 'ryoichi123@gmail.com',
-            'password' => Hash::make('DVFAsdfvsd')
-        ];
-        DB::table('users')->insert($param);
-        $param = [
-            'name' => 'toki',
-            'email' => 'toki123@gmail.com',
-            'password' => Hash::make('DVFAsdfvsd')
-        ];
-        DB::table('users')->insert($param);
-        $param = [
-            'name' => 'yasuyo',
-            'email' => 'yasuyo123@gmail.com',
-            'password' => Hash::make('DVFAsdfvsd')
-        ];
-        DB::table('users')->insert($param);
-        $param = [
-            'name' => 'ippei',
-            'email' => 'ippei123@gmail.com',
-            'password' => Hash::make('DVFAsdfvsd')
-        ];
-        DB::table('users')->insert($param);
-        $param = [
-            'name' => 'mina',
-            'email' => 'mina123@gmail.com',
-            'password' => Hash::make('DVFAsdfvsd')
-        ];
-        DB::table('users')->insert($param);
-        $param = [
-            'name' => 'yuka',
-            'email' => 'yuka123@gmail.com',
-            'password' => Hash::make('DVFAsdfvsd')
-        ];
-        DB::table('users')->insert($param);
-        $param = [
-            'name' => 'jun',
-            'email' => 'jun123@gmail.com',
-            'password' => Hash::make('DVFAsdfvsd')
-        ];
-        DB::table('users')->insert($param);
-        $param = [
-            'name' => 'ryou',
-            'email' => 'ryou123@gmail.com',
-            'password' => Hash::make('DVFAsdfvsd')
-        ];
-        DB::table('users')->insert($param);
+        /* User::factory()->count(50)
+        ->has(
+            Attendance::factory()->attendanceOrder()->count(rand(1, 6))
+        )
+        ->has(
+            Rest::factory()->breakOrder()->count(rand(0,5))
+        )
+        ->create(); */
+        for ($i=0;$i<20;$i++) {
+            $param = [
+                'name' => Str::rand,
+                'age' => rand(18, 60),
+                'password' => User::factory()->faker->password,
+            ];
+            User::create($param);
+        }
+        
     }
 }

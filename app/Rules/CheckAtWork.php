@@ -29,7 +29,7 @@ class CheckAtWork implements Rule
      */
     public function passes($attribute, $value)
     {
-        $result = Attendance::where('date', $this->now->format('Y:m:d'))->whereNotNull('start_working')->where('id_u', $this->id)->exists();
+        $result = Attendance::where('date', $this->now->format('Y:m:d'))->whereNotNull('start_working')->where('user_id', $this->id)->exists();
         return isset($result);
     }
 

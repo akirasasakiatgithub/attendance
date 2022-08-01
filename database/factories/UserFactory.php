@@ -4,9 +4,20 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use Database\Factories\AttendanceFactory;
+use Illuminate\Database\Eloquent\Factories\Sequence;
+use App\Models\Attendance;
+use App\Models\Rest;
+
 
 class UserFactory extends Factory
 {
+    public static $signupDateFaker;
+
+    public static $attendanceDateFaker;
+
+    public static $attendanceTimeFaker;
+
     /**
      * Define the model's default state.
      *
@@ -14,14 +25,16 @@ class UserFactory extends Factory
      */
     public function definition()
     {
+        $attendanceDateFaker = AttendanceFactory::$attendanceDateFaker;
+        self::$signupDateFaker = $this->faker->dateTime($attendanceDateFaker . $this->faker->time(' H:i:s'));
         return [
-            'name' => $this->faker->name(),
+            'name' => Str::random(10),
             'email' => $this->faker->unique()->safeEmail(),
-            'password' => $this->password,
-            'id' => $this->faker->numberBetween(1, 300),
+            'password' => $this->faker->password,
+            //'id' => $this->faker->numberBetween(1, 100),
             'remember_token' => Str::random(10),
-            'created_at' => $this->faker->dateTime(),
-            'update_at' => $this->faker->dateTime()
+            'created_at' => self::$signupDateFaker,
+            'updated_at' => self::$signupDateFaker,
         ];
     }
 

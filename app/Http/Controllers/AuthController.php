@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\ClientRequest;
 use App\Rules\ValidateEmail;
 use App\Rules\ValidatePassword;
@@ -21,8 +22,8 @@ class AuthController extends Controller
     {
         return view('register');
     }
-    //try文確認
-    public function postRegister(ClientRequest $request)
+
+    public function postRegister(RegisterRequest $request)
     {
         try {
             $user = User::create([

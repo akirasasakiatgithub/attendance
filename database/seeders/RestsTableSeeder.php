@@ -15,123 +15,123 @@ class RestsTableSeeder extends Seeder
     public function run()
     {
         $param = [
-            'id_u' => '1',
-            'date' => '2021-12-15',
-            'start_break' => '2021-12-15 12:15:00',
+            'user_id' => '1',
+            'date' => '2022-08-01',
+            'start_break' => '2022-08-01 12:15:00',
             'end_break' => null,
-            'created_at' => '2021-12-15 12:15:00',
-            'updated_at' => '2021-12-15 12:15:00'
+            'created_at' => '2022-08-01 12:15:00',
+            'updated_at' => '2022-08-01 12:15:00'
         ];
         DB::table('rests')->insert($param);
 
-        $param = [
-            'id_u' => '1',
-            'date' => '2021-12-15',
+        /* $param = [
+            'user_id' => '1',
+            'date' => '2022-08-01',
             'start_break' => null,
-            'end_break' => '2021-12-15 13:15:00',
-            'created_at' => '2021-12-15 13:15:00',
-            'updated_at' => '2021-12-15 13:15:00'
+            'end_break' => '2022-08-01 13:15:00',
+            'created_at' => '2022-08-01 13:15:00',
+            'updated_at' => '2022-08-01 13:15:00'
         ];
-        DB::table('rests')->insert($param);
+        DB::table('rests')->insert($param); */
 
         $param = [
-            'id_u' => '2',
-            'date' => '2021-12-15',
-            'start_break' => '2021-12-15 12:20:00',
+            'user_id' => '2',
+            'date' => '2022-08-01',
+            'start_break' => '2022-08-01 11:20:00',
             'end_break' => null,
-            'created_at' => '2021-12-15 12:20:00',
-            'updated_at' => '2021-12-15 12:20:00'
+            'created_at' => '2022-08-01 12:20:00',
+            'updated_at' => '2022-08-01 12:20:00'
         ];
         DB::table('rests')->insert($param);
 
         $param = [
-            'id_u' => '2',
-            'date' => '2021-12-15',
+            'user_id' => '2',
+            'date' => '2022-08-01',
             'start_break' => null,
-            'end_break' => '2021-12-15 13:20:00',
-            'created_at' => '2021-12-15 13:20:00',
-            'updated_at' => '2021-12-15 13:20:00'
+            'end_break' => '2022-08-01 11:40:00',
+            'created_at' => '2022-08-01 13:20:00',
+            'updated_at' => '2022-08-01 13:20:00'
         ];
         DB::table('rests')->insert($param);
 
         $param = [
-            'id_u' => '3',
-            'date' => '2021-12-15',
-            'start_break' => '2021-12-15 12:25:00',
+            'user_id' => '3',
+            'date' => '2022-08-01',
+            'start_break' => '2022-08-01 12:20:00',
             'end_break' => null,
-            'created_at' => '2021-12-15 12:25:00',
-            'updated_at' => '2021-12-15 12:25:00'
+            'created_at' => '2022-08-01 12:25:00',
+            'updated_at' => '2022-08-01 12:25:00'
         ];
         DB::table('rests')->insert($param);
 
         $param = [
-            'id_u' => '3',
-            'date' => '2021-12-15',
+            'user_id' => '3',
+            'date' => '2022-08-01',
             'start_break' => null,
-            'end_break' => '2021-12-15 13:25:00',
-            'created_at' => '2021-12-15 13:25:00',
-            'updated_at' => '2021-12-15 13:25:00'
+            'end_break' => '2022-08-01 12:25:00',
+            'created_at' => '2022-08-01 13:25:00',
+            'updated_at' => '2022-08-01 13:25:00'
         ];
         DB::table('rests')->insert($param);
 
-        $param = [
-            'id_u' => '1',
-            'date' => '2021-12-20',
-            'start_break' => '2021-12-20 12:15:00',
+        /* $param = [
+            'user_id' => '1',
+            'date' => '2022-08-01',
+            'start_break' => '2022-08-01 12:15:00',
             'end_break' => null,
-            'created_at' => '2021-12-20 12:15:00',
-            'updated_at' => '2021-12-20 12:15:00'
+            'created_at' => '2022-08-01 12:15:00',
+            'updated_at' => '2022-08-01 12:15:00'
         ];
         DB::table('rests')->insert($param);
 
         $param = [
-            'id_u' => '1',
-            'date' => '2021-12-20',
+            'user_id' => '1',
+            'date' => '2022-08-01',
             'start_break' => null,
-            'end_break' => '2021-12-20 13:15:00',
-            'created_at' => '2021-12-20 13:15:00',
-            'updated_at' => '2021-12-20 13:15:00'
+            'end_break' => '2022-08-01 13:15:00',
+            'created_at' => '2022-08-01 13:15:00',
+            'updated_at' => '2022-08-01 13:15:00'
         ];
         DB::table('rests')->insert($param);
 
         $param = [
-            'id_u' => '2',
-            'date' => '2021-12-20',
-            'start_break' => '2021-12-20 12:20:00',
+            'user_id' => '2',
+            'date' => '2022-08-01',
+            'start_break' => '2022-08-01 12:20:00',
             'end_break' => null,
-            'created_at' => '2021-12-20 12:20:00',
-            'updated_at' => '2021-12-20 12:20:00'
+            'created_at' => '2022-08-01 12:20:00',
+            'updated_at' => '2022-08-01 12:20:00'
         ];
         DB::table('rests')->insert($param);
 
         $param = [
-            'id_u' => '2',
-            'date' => '2021-12-20',
+            'user_id' => '2',
+            'date' => '2022-08-01',
             'start_break' => null,
-            'end_break' => '2021-12-20 13:20:00',
-            'created_at' => '2021-12-20 13:20:00',
-            'updated_at' => '2021-12-20 13:20:00'
+            'end_break' => '2022-08-01 13:20:00',
+            'created_at' => '2022-08-01 13:20:00',
+            'updated_at' => '2022-08-01 13:20:00'
         ];
         DB::table('rests')->insert($param);
 
         $param = [
-            'id_u' => '3',
-            'date' => '2021-12-20',
-            'start_break' => '2021-12-20 12:25:00',
+            'user_id' => '3',
+            'date' => '2022-08-01',
+            'start_break' => '2022-08-01 12:25:00',
             'end_break' => null,
-            'created_at' => '2021-12-20 12:25:00',
-            'updated_at' => '2021-12-20 12:25:00'
+            'created_at' => '2022-08-01 12:25:00',
+            'updated_at' => '2022-08-01 12:25:00'
         ];
         DB::table('rests')->insert($param);
 
         $param = [
-            'id_u' => '3',
-            'date' => '2021-12-20',
+            'user_id' => '3',
+            'date' => '2022-08-01',
             'start_break' => null,
-            'end_break' => '2021-12-20 13:25:00',
-            'created_at' => '2021-12-20 13:25:00',
-            'updated_at' => '2021-12-20 13:25:00'
+            'end_break' => '2022-08-01 13:25:00',
+            'created_at' => '2022-08-01 13:25:00',
+            'updated_at' => '2022-08-01 13:25:00'
         ];
-        DB::table('rests')->insert($param);
+        DB::table('rests')->insert($param); */
     }
 }

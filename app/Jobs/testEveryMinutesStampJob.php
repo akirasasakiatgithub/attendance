@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 
-class automaticStamp implements ShouldQueue
+class testEveryMinutesStampJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -35,8 +35,8 @@ class automaticStamp implements ShouldQueue
     {
         $now = Carbon::now();
         $this->now = $now;
-        $atteIds = Attendance::where('date', $now->subDay()->format('Y:m:d'))->pluck('user_id');
-        $workEndIds = Attendance::where('date', $now->subDay()->format('Y:m:d'))->whereNotNull('end_working')->pluck('user_id');
+        $atteIds = Attendance::where('date', $now->format('Y:m:d'))->pluck('user_id');
+        $workEndIds = Attendance::where('date', $now->format('Y:m:d'))->whereNotNull('end_working')->pluck('user_id');
         $workNotEndIds = $atteIds->diff($workEndIds);
 
         if ($workNotEndIds) {
@@ -47,9 +47,9 @@ class automaticStamp implements ShouldQueue
 
             foreach ($this->workNotEndIds as $userId) {
 
-                $startBreak = Rest::where('date', $now->subDay()->format('Y:m:d'))->where('user_id', $userId)->whereNotNull('start_break')->get();
+                $startBreak = Rest::where('date', $now->format('Y:m:d'))->where('user_id', $userId)->whereNotNull('start_break')->get();
 
-                $endBreak = Rest::where('date', $now->subDay()->format('Y:m:d'))->where('user_id', $userId)->whereNotNull('end_break')->get();
+                $endBreak = Rest::where('date', $now->format('Y:m:d'))->where('user_id', $userId)->whereNotNull('end_break')->get();
 
                 $sBNum = count($startBreak);
                 $eBNum = count($endBreak);
@@ -60,6 +60,11 @@ class automaticStamp implements ShouldQueue
             }
             $this->breakNotEndIds = $breakNotEndIds;
         }
+    }
+
+    public function __invoke()
+    {
+        $this->handle();
     }
 
     /**
@@ -84,8 +89,10 @@ class automaticStamp implements ShouldQueue
 
             foreach ($this->breakNotEndIds as $userId) {
                 Rest::create([
-                    'date' => $this->now->subDay()->format('Y-m-d'),
-                    'end_break' => $this->now->format('Y-m-d')/*  H:i:s') */ . '23:59:59',
+                    //->/*subDay()が必*/要か試す
+                    'date' => $this->now->format('Y-m-d'),
+                    //->addDay()をはさむ必要があるか試して考える
+                    'end_break' => $this->now->format('Y-m-d H:i:s') /*  . '23:59:59' */,
                     'user_id' => $userId,
                 ]);
             }
@@ -93,8 +100,8 @@ class automaticStamp implements ShouldQueue
 
         foreach ($this->workNotEndIds as $userId) {
             Attendance::create([
-                'date' => $this->now->subDay()->format('Y-m-d'),
-                'end_working' => $this->now->format('Y-m-d')/*  H:i:s') */ . '23:59:59',
+                'date' => $this->now->format('Y-m-d'),
+                'end_working' => $this->now->format('Y-m-d H:i:s')/*  . '23:59:59' */,
                 'user_id' => $userId,
             ]);
         }
@@ -102,11 +109,10 @@ class automaticStamp implements ShouldQueue
 
     public function startStamp()
     {
-        foreach
-        ($this->workNotEndIds as $userId) {
+        foreach ($this->workNotEndIds as $userId) {
             Attendance::create([
                 'date' => $this->now->format('Y-m-d'),
-                'start_working' => $this->now->format('Y-m-d H:i:s')/*  . '00:00:00' */,
+                'start_working' => $this->now->format('Y-m-d H:i:s')/*   . '00:00:00' */,
                 'user_id' => $userId,
             ]);
         }
@@ -116,7 +122,7 @@ class automaticStamp implements ShouldQueue
             foreach ($this->breakNotEndIds as $userId) {
                 Rest::create([
                     'date' => $this->now->format('Y-m-d'),
-                    'start_break' => $this->now->format('Y-m-d H:i:s')/*  . '00:00:00' */,
+                    'start_break' => $this->now->format('Y-m-d H:i:s')/*   . '00:00:00' */,
                     'user_id' => $userId,
                 ]);
             }

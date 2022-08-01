@@ -36,7 +36,7 @@ class testStampJob implements ShouldQueue
     {
         $this->handle();
     }
-    
+
     public function handle()
     {
         //休憩時間記録用のモデルに休憩開始時刻を打刻
@@ -44,14 +44,14 @@ class testStampJob implements ShouldQueue
         Rest::create([
             'date' => $now->format('Y-m-d'),
             'start_break' => $now->format('Y-m-d H:i:s'),
-            'id_u' => $this->id,
+            'user_id' => $this->id,
         ]);
 
         //開始時刻に1秒加えて休憩終了時刻を打刻
         Rest::create([
             'date' => $now->addSecond()->format('Y-m-d'),
             'end_break' => $now->format('Y-m-d H:i:s'),
-            'id_u' => Auth::id()
+            'user_id' => $this->id,
         ]);
     }
 }

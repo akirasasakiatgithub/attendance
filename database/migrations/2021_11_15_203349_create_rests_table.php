@@ -14,11 +14,11 @@ class CreateRestsTable extends Migration
     public function up()
     {
         Schema::create('rests', function (Blueprint $table) {
-            $table->id('id_r');
+            $table->id();
             $table->date('date');
             $table->timestamp('start_break')->nullable();
             $table->timestamp('end_break')->nullable();
-            $table->unsignedBigInteger('id_u');
+            $table->unsignedBigInteger('user_id');
             $table->timestamp('created_at')->useCurrent()->nullable();
             $table->timestamp('updated_at')->useCurrent()->nullable();
         });

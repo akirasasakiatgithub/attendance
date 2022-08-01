@@ -8,7 +8,8 @@ use \Illuminate\Contracts\Pagination\LengthAwarePaginator;
 /**
  * Paginator情報を検索結果モデル情報に変換します。
  */
-class ConvertPaginatorToSearchResultModel extends BaseConvertPaginator {
+class ConvertPaginatorToSearchResultModel extends BaseConvertPaginator
+{
 
     /**
      * コンストラクタ
@@ -31,10 +32,9 @@ class ConvertPaginatorToSearchResultModel extends BaseConvertPaginator {
         $retDetails = [];
         $dailyAtte = $this->__originPaginator;
         if ($dailyAtte->isNotEmpty()) {
-            $idlistA = $dailyAtte->unique('id_u')->pluck('id_u');
+            $idlistA = $dailyAtte->unique('user_id')->pluck('user_id');
         }
-        foreach($this->__originPaginator as $detailInfo)
-        {
+        foreach ($this->__originPaginator as $detailInfo) {
             $table1 = $detailInfo;
             $table2 = $table1->table2;
             $table3 = $table2->table3;

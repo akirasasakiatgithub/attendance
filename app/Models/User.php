@@ -50,11 +50,6 @@ class User extends Authenticatable
 
   public function attendances()
   {
-    return $this->hasMany('App\Models\Attendance');
-  }
-
-  public function rests()
-  {
-    return $this->hasMany('App\Models\rest');
+    return $this->hasMany(Rest::class);
   }
 }

@@ -21,9 +21,9 @@ if (!function_exists('adjustAttendance')) {
         $dataSet = collect([]);
         // 全レコードから$idListAを元に個人ごとのレコードを取得。
         if ($dailyAtte->isNotEmpty()) {
-            $idlistA = $dailyAtte->unique('id_u')->pluck('id_u');
+            $idlistA = $dailyAtte->unique('user_id')->pluck('user_id');
             for ($i = 0; $i < count($idlistA); $i++) {
-                $personAtte = $dailyAtte->where('id_u', $idlistA[$i]);
+                $personAtte = $dailyAtte->where('user_id', $idlistA[$i]);
                 $startWork = new Carbon($personAtte->whereNotNull('start_working')->pluck('start_working')->first());
                 $getTimeValue = $personAtte->whereNotNull('end_working')->pluck('end_working')->first();
                 $endWork = new Carbon($getTimeValue);
@@ -31,7 +31,7 @@ if (!function_exists('adjustAttendance')) {
                 $workTime = $startWork->diff($endWork);
                 $name = User::where('id', $idlistA[$i])->value('name');
                 //勤務中の場合は勤務終了を---、勤務時間の後に（勤務中）と表示する。
-                if(isset($getTimeValue)) {
+                if (isset($getTimeValue)) {
                     $endWork = $endWork->format('H:i:s');
                     $workTime = $workTime->format('%H:%I:%S');
                 } else {
@@ -48,7 +48,6 @@ if (!function_exists('adjustAttendance')) {
         //ddd($dataSet);
         return $dataSet;
     }
-
 }
 
 if (!function_exists('adjustBreak')) {
@@ -62,14 +61,14 @@ if (!function_exists('adjustBreak')) {
         $dailyBreak = Rest::where('date', $date)->get();
         $dataSet = collect([]);
         if ($dailyBreak->isNotEmpty()) {
-            $idlistB = $dailyBreak->unique('id_u')->pluck('id_u');
+            $idlistB = $dailyBreak->unique('user_id')->pluck('user_id');
             for ($i = 0; $i < count($idlistB); $i++) {
                 //！※休憩は何度でもとってよいことに留意！
                 //個人の全休憩レコードを取得
-                $personBreak = $dailyBreak->where('id_u', $idlistB[$i]);
+                $personBreak = $dailyBreak->where('user_id', $idlistB[$i]);
                 $totalBreakSeconds = 0;
                 //$personBreakの個数が奇数になる人（現在休憩中の人）のための分岐
-                if(count($personBreak) % 2 == 0) {
+                if (count($personBreak) % 2 == 0) {
                     $breakNum = (count($personBreak) / 2);
                 } else {
                     $breakNum = ((count($personBreak) + 1) / 2);
@@ -96,7 +95,7 @@ if (!function_exists('adjustBreak')) {
     }
 }
 
-if (! function_exists('connectCollection')) {
+if (!function_exists('connectCollection')) {
     /**
      * 別々のモデルから引き出されたCollectionをつなげる
      *
@@ -123,7 +122,7 @@ if (! function_exists('connectCollection')) {
     }
 }
 
-if (! function_exists('searchAttePsn')) {
+if (!function_exists('searchAttePsn')) {
     /**
      * ログインしている人の勤怠記録を表示する
      *
@@ -134,12 +133,12 @@ if (! function_exists('searchAttePsn')) {
         //現在ログインしている人のidでモデルからこれまでの勤怠記録（休憩除く）を全て取得
         //日にちで検索した場合は、引数で与えられた日にちで絞り込み
         $psnId = Auth::id();
-        $psnAtte = Attendance::where('id_u', $psnId)->when($date, function($query, $date) {
+        $psnAtte = Attendance::where('user_id', $psnId)->when($date, function ($query, $date) {
             return $query->where('date', $date);
-        }, function($query) {
+        }, function ($query) {
             return $query;
         })
-        ->get();
+            ->get();
         //日ごとに出勤・退勤のレコードがあるので、それらをまとめて出勤日のカラムの値を順に引き出し
         $dateList = $psnAtte->unique('date')->pluck('date');
         $dataSet = collect([]);
@@ -162,11 +161,11 @@ if (! function_exists('searchAttePsn')) {
                 $workTime = $psnStrt->diff($psnEnd);
 
                 // ①退勤時間の値があれば退勤時間と勤務時間を記録
-                if(isset($getTimeValue)) {
+                if (isset($getTimeValue)) {
                     $psnEnd = $psnEnd->format('H:i:s');
                     $workTime = $workTime->format('%H:%I:%S');
                 } else {
-                //退勤時間の値が無い（勤務中）なら、それぞれ以下のように記録
+                    //退勤時間の値が無い（勤務中）なら、それぞれ以下のように記録
                     $psnEnd = '---';
                     $workTime = $workTime->format('%H:%I:%S') . '勤務中';
                 }
@@ -176,13 +175,13 @@ if (! function_exists('searchAttePsn')) {
                 $dataSet[$i] = $dailyData;
             }
         } else {
-                $dataSet = null;
+            $dataSet = null;
         }
         return $dataSet;
     }
 }
 
-if (! function_exists('searchBreakPsn')) {
+if (!function_exists('searchBreakPsn')) {
     /**
      * 関数の説明文
      *
@@ -191,7 +190,7 @@ if (! function_exists('searchBreakPsn')) {
     function searchBreakPsn($date = 'all')
     {
         $psnId = Auth::id();
-        $psnBreak = Rest::where('id_u', $psnId)->get();
+        $psnBreak = Rest::where('user_id', $psnId)->get();
         if (!($date === 'all')) {
             $psnBreak = $psnBreak->where('date', $date);
         }
@@ -233,7 +232,7 @@ if (! function_exists('searchBreakPsn')) {
     }
 }
 
-if (! function_exists('search')) {
+if (!function_exists('search')) {
     /**
      * 関数の説明文
      *

@@ -3,10 +3,17 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Sequence;
+use Database\Factories\AttendanceFactory;
+use App\Models\Attendance;
 
 class RestFactory extends Factory
 {
+    public $attendanceDateFaker;
+
+    public $startTimeFaker;
+
+    public $endTimeFaker;
     /**
      * Define the model's default state.
      *
@@ -14,11 +21,24 @@ class RestFactory extends Factory
      */
     public function definition()
     {
+        $attendanceDateFaker = AttendanceFactory::$attendanceDateFaker;
         return [
-            'start_break' => $this->faker->dateTime(),
-            'end_break' => $this->faker->dateTime(),
-            'id_u' => User::factory(),
-            //'created_at'はstart(end)_breakと揃えたい
+            'date' => $attendanceDateFaker,
+            'start_break' => $attendanceDateFaker . $this->faker->time(' H:i:s'),
+            'end_break' => $attendanceDateFaker . $this->faker->time(' H:i:s'),
         ];
+    }
+
+    public function breakOrder(): Factory
+    {
+        // $this->attendanceDateFaker = $this->attendance->attendanceDateFaker;
+        $this->endTimeFaker = $this->faker()->time();
+        $this->startTimeFaker = $this->faker()->time('H:i:s', $this->endTimeFaker);
+        return $this->state(function (array $attributes, Attendance $attendance) {
+            return new Sequence(
+                ['start_break' => $attendance->date . '' . $this->startTimeFaker, 'end_break' => null, 'date' => $attendance->date],
+                ['start_break' => null, 'end_break' => $attendance->date . '' . $this->endTimeFaker, 'date' => $attendance->date]
+            );
+        });
     }
 }

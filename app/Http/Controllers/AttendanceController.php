@@ -27,7 +27,7 @@ class AttendanceController extends Controller
         Attendance::create([
             'date' => $startAttendanceTime->format('Y-m-d'),
             'start_working' => $startAttendanceTime->format('Y-m-d H:i:s'),
-            'id_u' => Auth::id()
+            'user_id' => Auth::id()
         ]);
         return redirect('/');
     }
@@ -43,7 +43,7 @@ class AttendanceController extends Controller
         Attendance::create([
             'date' => $endAttendanceTime->format('Y-m-d'),
             'end_working' => $endAttendanceTime->format('Y-m-d H:i:s'),
-            'id_u' => Auth::id()
+            'user_id' => Auth::id()
         ]);
         return redirect('/');
     }
